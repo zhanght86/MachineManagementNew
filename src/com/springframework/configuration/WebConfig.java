@@ -39,10 +39,10 @@ public class WebConfig implements WebApplicationInitializer{
         AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext=new AnnotationConfigWebApplicationContext();
         annotationConfigWebApplicationContext.register(SpringMVCConfig.class);
 //        annotationConfigWebApplicationContext.register(WebMvcConfig.class);
-        annotationConfigWebApplicationContext.register(AopConfig.class);
+//        annotationConfigWebApplicationContext.register(AopConfig.class);
         annotationConfigWebApplicationContext.setServletContext(servletContext);
     	servletContext.addListener(new ContextLoaderListener(annotationConfigWebApplicationContext));
-        annotationConfigWebApplicationContext.scan("com.springframework.*");
+        annotationConfigWebApplicationContext.scan("com.*");
         annotationConfigWebApplicationContext.setDisplayName("annotationConfigWebApplicationContext");
         annotationConfigWebApplicationContext.refresh();
         Dynamic servlet=servletContext.addServlet("dispatcher", new DispatcherServlet(annotationConfigWebApplicationContext));

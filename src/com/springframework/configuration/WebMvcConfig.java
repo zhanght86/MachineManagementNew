@@ -10,7 +10,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     
   @Override  
   public void addViewControllers(ViewControllerRegistry registry){  
-      registry.addViewController("/springframework/").setViewName("/springframework/index.do");  
-      registry.addRedirectViewController("/springframework/", "/springframework/index.do");
+      registry.addViewController("/MachineManagementNew/").setViewName("/MachineManagementNew/index.do");  
+      registry.addRedirectViewController("/MachineManagementNew/", "/MachineManagementNew/index.do");
   }  
 } 

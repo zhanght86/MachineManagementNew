@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 @EnableTransactionManagement
 public class ManchineManagementDao extends HibernateDaoSupport {
 
-	@Resource(name = "sessionFactoryManchineManagement")
-	public void init(SessionFactory sessionFactoryManchineManagement) {
-		setSessionFactory(sessionFactoryManchineManagement);
-	}
+	 @Resource(name="sessionFactoryMachineManagement")
+	 public void init(SessionFactory sessionFactoryMachineManagement) {
+	     setSessionFactory(sessionFactoryMachineManagement);
+	 }
 
 	/**
 	 * 直接执行hql
@@ -29,14 +29,15 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public List find(String hql) {
 		List list = null;
 		try {
 			Session session = this.getSessionFactory().getCurrentSession();
 			Query query = session.createQuery(hql);
+			
 			list = query.list();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -52,7 +53,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public List find(String hql, int pageNumber, int pageAmount) {
 		List list = null;
 		try {
@@ -61,7 +62,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 			query.setFirstResult((pageAmount) * (pageNumber - 1));
 			query.setMaxResults(pageAmount);
 			list = query.list();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -76,7 +77,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public List find(String hql, Object[] parameters) {
 		List list = null;
 		try {
@@ -84,9 +85,10 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 			Query query = session.createQuery(hql);
 			for (int i = 0; i < parameters.length; i++) {
 				query.setParameter(i, parameters[i]);
+				
 			}
 			list = query.list();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -103,7 +105,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public List find(String hql, Object[] parameters, int pageNumber, int pageAmount) {
 		List list = null;
 
@@ -116,7 +118,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 			query.setFirstResult((pageAmount) * (pageNumber - 1));
 			query.setMaxResults(pageAmount);
 			list = query.list();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -128,14 +130,14 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * 
 	 * @param object
 	 */
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public void saveOrUpdate(Object object) {
 		try {
 			Session session = this.getSessionFactory().getCurrentSession();
 			session.saveOrUpdate(object);
 			session.flush();
 			session.clear();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -147,26 +149,31 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @param object
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public void delete(Object object) {
 		try {
 			Session session = this.getSessionFactory().getCurrentSession();
-			if (object instanceof List) {
-				List list = (List) object;
-				for (Object obj : list) {
+			if(object instanceof List)
+			{
+				List list=(List) object;
+				for(Object obj:list)
+				{
 					session.delete(obj);
 					session.flush();
 				}
-			} else {
+			}
+			else
+			{
 				session.delete(object);
 				session.flush();
 			}
-
-			// session.close();
+		
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
+	
 
 	/**
 	 * 非select sql的执行，返回影响的数据的行数
@@ -175,14 +182,15 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public int update(String hql) {
 		int result = 0;
 		try {
 			Session session = this.getSessionFactory().getCurrentSession();
 			Query query = session.createQuery(hql);
 			result = query.executeUpdate();
-			// session.close();
+			session.flush();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -197,7 +205,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public int update(String hql, Object[] parameters) {
 		int result = 0;
 		try {
@@ -208,7 +216,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 			}
 			result = query.executeUpdate();
 			session.flush();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -224,14 +232,14 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public List findBySQL(String sql) {
 		List list = null;
 		try {
 			Session session = this.getSessionFactory().getCurrentSession();
 			NativeQuery nativeQuery = session.createNativeQuery(sql);
 			list = nativeQuery.list();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -247,7 +255,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public List findBySQL(String sql, int pageNumber, int pageAmount) {
 		List list = null;
 		try {
@@ -256,7 +264,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 			nativeQuery.setFirstResult((pageAmount) * (pageNumber - 1));
 			nativeQuery.setMaxResults(pageAmount);
 			list = nativeQuery.list();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -271,7 +279,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public List findBySQL(String sql, Object[] parameters) {
 		List list = null;
 		try {
@@ -281,7 +289,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 				nativeQuery.setParameter(i, parameters[i]);
 			}
 			list = nativeQuery.list();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -298,7 +306,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public List findBySQL(String sql, Object[] parameters, int pageNumber, int pageAmount) {
 		List list = null;
 		try {
@@ -310,7 +318,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 			nativeQuery.setFirstResult((pageAmount) * (pageNumber - 1));
 			nativeQuery.setMaxResults(pageAmount);
 			list = nativeQuery.list();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -326,7 +334,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public int updateBySQL(String sql) {
 		int result = 0;
 		try {
@@ -334,7 +342,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 			NativeQuery nativeQuery = session.createNativeQuery(sql);
 			result = nativeQuery.executeUpdate();
 			session.flush();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -349,7 +357,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	@Transactional(value = "transactionManagerManchineManagement")
+	@Transactional(value="transactionManagerMachineManagement")
 	public int updateBySQL(String sql, Object[] parameters) {
 		int result = 0;
 		try {
@@ -360,7 +368,7 @@ public class ManchineManagementDao extends HibernateDaoSupport {
 			}
 			result = nativeQuery.executeUpdate();
 			session.flush();
-			// session.close();
+			//session.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
