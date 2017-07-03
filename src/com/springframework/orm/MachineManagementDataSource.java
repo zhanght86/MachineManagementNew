@@ -34,7 +34,10 @@ public class MachineManagementDataSource {
 	private int idleConnectionTestPeriod = 10;
 	private int acquireRetryAttempts = 10;
 	private boolean breakAfterAcquireFailure = true;
-	private boolean testConnectionOnCheckout = false;
+	private boolean testConnectionOnCheckin = true;
+	private boolean testConnectionOnCheckout = true;
+	private String preferredTestQuery="SELECT 1";
+	
 	// Hibernate Configuration
 	private String[] packageToScan =new String[]{"com.las.MachineManagement.Bean"};
 	private String hibernate_hbm2ddl_auto = "none";

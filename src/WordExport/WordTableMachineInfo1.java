@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.util.List;
 
-import MachineManagement.DataModel.MachineInfo;
-
+import com.las.MachineManagement.Bean.Machineinfo;
 import com.lowagie.text.Cell;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -15,7 +14,7 @@ import com.lowagie.text.Table;
 public class WordTableMachineInfo1 {
 	
 	
-public static Table getTable(List<MachineInfo> machneInfoList)
+public static Table getTable(List<Machineinfo> machneInfoList)
 {
 	Table table;
 	BigDecimal total=new BigDecimal("0");
@@ -105,7 +104,7 @@ public static Table getTable(List<MachineInfo> machneInfoList)
     for (int i=0;i<machneInfoList.size();i++)
     {
     	//序号内容
-        cell= new Cell(new Paragraph(String.valueOf(machneInfoList.get(i).getDisplayNumber()) , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+        cell= new Cell(new Paragraph(String.valueOf(i+1) , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);  
         
@@ -154,28 +153,28 @@ public static Table getTable(List<MachineInfo> machneInfoList)
         
         
         //机器位置
-        cell= new Cell(new Paragraph(machneInfoList.get(i).machineLocation , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+        cell= new Cell(new Paragraph(machneInfoList.get(i).getMachineLocation() , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
         table.addCell(cell);  
         
         //ip
-        cell= new Cell(new Paragraph(machneInfoList.get(i).ipAdd , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+        cell= new Cell(new Paragraph(machneInfoList.get(i).getIpadd() , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
         table.addCell(cell);  
         
         //机型
-        cell= new Cell(new Paragraph(machneInfoList.get(i).model , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+        cell= new Cell(new Paragraph(machneInfoList.get(i).getModel() , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
         table.addCell(cell);  
         
         //用途
-        cell= new Cell(new Paragraph(machneInfoList.get(i).machineUsage , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+        cell= new Cell(new Paragraph(machneInfoList.get(i).getMachineUsage() , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
         table.addCell(cell);  
         
         //部门
-        cell= new Cell(new Paragraph(machneInfoList.get(i).department , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+        cell= new Cell(new Paragraph(machneInfoList.get(i).getDepartment() , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);  
         
         //责任人
-        cell= new Cell(new Paragraph(machneInfoList.get(i).responsible , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+        cell= new Cell(new Paragraph(machneInfoList.get(i).getResponsible() , new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cell);  
         

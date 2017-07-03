@@ -1,5 +1,5 @@
 package com.las.MachineManagement.Bean;
-// Generated 2017-4-12 10:59:31 by Hibernate Tools 5.2.1.Final
+// Generated 2017-7-3 9:45:31 by Hibernate Tools 5.2.3.Final
 
 import java.util.HashSet;
 import java.util.Set;

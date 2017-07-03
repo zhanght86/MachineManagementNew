@@ -42,7 +42,7 @@ public class WordTableCheckinfob {
 
 
 	    //流水号 内容
-	    cell= new Cell(new Paragraph(checkInfoB.flowNumber, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getFlowNumber(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    table.addCell(cell); 
 	    
 	    //责任部门
@@ -52,7 +52,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell);  
 	    
 	    //责任部门 内容
-	    cell= new Cell(new Paragraph(checkInfoB.responsibilityDepartment, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getResponsibilityDepartment(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(2); 
 	    table.addCell(cell);  
 	    
@@ -63,7 +63,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell);  
 	    
 	    //机器位置 内容
-	    cell= new Cell(new Paragraph(checkInfoB.machineLocation, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getMachineLocation(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(3); 
 	    table.addCell(cell);  
 
@@ -75,7 +75,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell); 
 	    
 	    //IP地址 内容
-	    cell= new Cell(new Paragraph(checkInfoB.ipAdd, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getIpadd(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(3); 
 	    table.addCell(cell);  
 
@@ -90,7 +90,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell);  
 
 	    //资产号 内容
-	    cell= new Cell(new Paragraph(checkInfoB.propertyNumber, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getPropertyNumber(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(4); 
 	    table.addCell(cell); 
 	    
@@ -101,7 +101,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell);  
 	    
 	    //机器型号 内容
-	    cell= new Cell(new Paragraph(checkInfoB.model, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getModel(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(3); 
 	    table.addCell(cell);  
 	    
@@ -112,7 +112,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell);  
 	    
 	    //用途  内容
-	    cell= new Cell(new Paragraph(checkInfoB.machineUsage, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getMachineUsage(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(3); 
 	    table.addCell(cell);  
 
@@ -125,7 +125,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell);  
 
 	    //序列号 内容
-	    cell= new Cell(new Paragraph(checkInfoB.serialNumber, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getSerialNumber(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(4); 
 	    table.addCell(cell); 
 	    
@@ -137,7 +137,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell);  
 	    
 	    //系统信息 内容
-	    cell= new Cell(new Paragraph(checkInfoB.systemInfo, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getSystemInfo(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(3); 
 	    table.addCell(cell);  
 	    
@@ -148,7 +148,7 @@ public class WordTableCheckinfob {
 	    table.addCell(cell);  
 	    
 	    //维护人员  内容
-	    cell= new Cell(new Paragraph(checkInfoB.mantainceStaff, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+	    cell= new Cell(new Paragraph(checkInfoB.getMantainceStaff(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
 	    cell.setColspan(3); 
 	    table.addCell(cell);  
 

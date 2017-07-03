@@ -1,5 +1,5 @@
 package com.las.MachineManagement.Bean;
-// Generated 2017-4-12 10:59:31 by Hibernate Tools 5.2.1.Final
+// Generated 2017-7-3 9:45:31 by Hibernate Tools 5.2.3.Final
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +25,7 @@ public class Checkrecorda implements java.io.Serializable {
 	private String patch;
 	private String application;
 	private String dataBaseCheck;
-	private String _360check;
+	private String check360;
 	private String antivirus;
 	private String passwordStrength;
 	private String accountNormal;
@@ -52,14 +52,14 @@ public class Checkrecorda implements java.io.Serializable {
 		this.checkinfoa = checkinfoa;
 	}
 
-	public Checkrecorda(Checkinfoa checkinfoa, String os, Integer monthNumber, String patch, String application, String dataBaseCheck, String _360check, String antivirus, String passwordStrength, String accountNormal, String accountAbnormal, String eventLog, String webLog, String dataBaseLog, String hardDriverUsage, String pageException, String reactionaryException, String patchScanExist, String patchScanHandle, String patchScanOperator, String service, String osresponsibleSingnature, String osadminsitratorSignature, String checkstate, String state) {
+	public Checkrecorda(Checkinfoa checkinfoa, String os, Integer monthNumber, String patch, String application, String dataBaseCheck, String check360, String antivirus, String passwordStrength, String accountNormal, String accountAbnormal, String eventLog, String webLog, String dataBaseLog, String hardDriverUsage, String pageException, String reactionaryException, String patchScanExist, String patchScanHandle, String patchScanOperator, String service, String osresponsibleSingnature, String osadminsitratorSignature, String checkstate, String state) {
        this.checkinfoa = checkinfoa;
        this.os = os;
        this.monthNumber = monthNumber;
        this.patch = patch;
        this.application = application;
        this.dataBaseCheck = dataBaseCheck;
-       this._360check = _360check;
+       this.check360 = check360;
        this.antivirus = antivirus;
        this.passwordStrength = passwordStrength;
        this.accountNormal = accountNormal;
@@ -147,13 +147,13 @@ public class Checkrecorda implements java.io.Serializable {
 		this.dataBaseCheck = dataBaseCheck;
 	}
 
-	@Column(name="_360check", length=100)
-    public String get360check() {
-        return this._360check;
+	@Column(name="360Check", length=100)
+    public String getCheck360() {
+        return this.check360;
     }
 
-	public void set360check(String _360check) {
-        this._360check = _360check;
+	public void setCheck360(String check360) {
+        this.check360 = check360;
     }
 
 	@Column(name = "Antivirus", length = 100)

@@ -43,7 +43,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     //table.endHeaders();
 
     //流水号 内容
-    table.addCell(new Paragraph(checkInfoA.flowNumber, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0))));
+    table.addCell(new Paragraph(checkInfoA.getFlowNumber(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0))));
     
     //责任部门
     cell= new Cell(new Paragraph("责任部门", new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
@@ -54,7 +54,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //责任部门 内容
-    cell= new Cell(new Paragraph(checkInfoA.responsibilityDepartment, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getResponsibilityDepartment(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     //cell.setHeader(true);  
     
     cell.setColspan(2); 
@@ -70,7 +70,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     //table.endHeaders();
     
     //机器位置 内容
-    cell= new Cell(new Paragraph(checkInfoA.machineLocation, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getMachineLocation(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     //cell.setHeader(true);  
     
     cell.setColspan(3); 
@@ -88,7 +88,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     //table.endHeaders();
     
     //IP地址 内容
-    cell= new Cell(new Paragraph(checkInfoA.ipAdd, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getIpadd(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     //cell.setHeader(true);  
     
     cell.setColspan(3); 
@@ -109,9 +109,9 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     //table.endHeaders();
 
     //资产号 内容
-    cell= new Cell(new Paragraph(checkInfoA.propertyNumber, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getPropertyNumber(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     //cell.setHeader(true);  
-    
+  
     cell.setColspan(4); 
     table.addCell(cell); 
     
@@ -124,7 +124,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //机器型号 内容
-    cell= new Cell(new Paragraph(checkInfoA.model, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getModel(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     //cell.setHeader(true);  
     
     cell.setColspan(3); 
@@ -137,7 +137,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //用途  内容
-    cell= new Cell(new Paragraph(checkInfoA.machineUsage, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getMachineUsage(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setColspan(3); 
     table.addCell(cell);  
 
@@ -151,7 +151,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
 
     //序列号 内容
-    cell= new Cell(new Paragraph(checkInfoA.serialNumber, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getSerialNumber(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setColspan(4); 
     table.addCell(cell); 
     
@@ -164,7 +164,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //系统信息 内容
-    cell= new Cell(new Paragraph(checkInfoA.systemInfo, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getSystemInfo(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setColspan(3); 
     table.addCell(cell);  
     
@@ -175,7 +175,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //维护人员  内容
-    cell= new Cell(new Paragraph(checkInfoA.mantainceStaff, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getMantainceStaff(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setColspan(3); 
     table.addCell(cell);  
     
@@ -530,7 +530,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //备份内容 内容
-    cell= new Cell(new Paragraph(checkInfoA.backupContent, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getBackupContent(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHeader(true);  
     cell.setColspan(4); 
     table.addCell(cell);  
@@ -543,7 +543,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //变更1 内容
-    cell= new Cell(new Paragraph(checkInfoA.backupContentChange1, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getBackupContentChange1(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHeader(true);  
     cell.setColspan(3); 
     table.addCell(cell);  
@@ -556,7 +556,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //变更2 内容
-    cell= new Cell(new Paragraph(checkInfoA.backupContentChange2, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getBackupContentChange2(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
     cell.setHeader(true);  
     cell.setColspan(3); 
@@ -572,7 +572,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
 
     
     //文件目录 内容
-    cell= new Cell(new Paragraph(checkInfoA.fileDirectory, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getFileDirectory(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHeader(true);  
     cell.setColspan(4); 
     table.addCell(cell);  
@@ -584,7 +584,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //变更1 内容
-    cell= new Cell(new Paragraph(checkInfoA.fileDirectoryChange1, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getFileDirectoryChange1(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
     cell.setHeader(true);  
     cell.setColspan(3); 
@@ -598,7 +598,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //变更2 内容
-    cell= new Cell(new Paragraph(checkInfoA.fileDirectoryChange2, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getFileDirectoryChange2(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHeader(true);  
     cell.setColspan(3); 
     table.addCell(cell);  
@@ -612,7 +612,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
 
     //备份周期  内容
-    cell= new Cell(new Paragraph(checkInfoA.backupPeriod, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getBackupPeriod(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHeader(true);  
     cell.setColspan(4); 
     table.addCell(cell);  
@@ -624,7 +624,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //变更1 内容
-    cell= new Cell(new Paragraph(checkInfoA.backupPeriodChange1, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getBackupPeriodChange1(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHeader(true);  
     cell.setColspan(3); 
     table.addCell(cell);  
@@ -638,7 +638,7 @@ public static Table getTable(Checkinfoa checkInfoA, HashMap<Integer, Checkrecord
     table.addCell(cell);  
     
     //变更2 内容
-    cell= new Cell(new Paragraph(checkInfoA.backupPeriodChange2, new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
+    cell= new Cell(new Paragraph(checkInfoA.getBackupPeriodChange2(), new Font(Font.NORMAL,11, Font.NORMAL, new Color(0, 0, 0)))); 
     cell.setHeader(true);  
     cell.setColspan(3); 
     table.addCell(cell);  
