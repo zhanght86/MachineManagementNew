@@ -1,6 +1,7 @@
 package MachineManagement.Controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +20,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.las.MachineManagement.Bean.Operationtype;
 import com.las.MachineManagement.Bean.Userrole;
 import com.las.MachineManagement.Bean.Users;
+import com.las.MachineManagement.Bean.UsersUserroleR;
 import com.springframework.orm.ManchineManagementDao;
-
-import MachineManagement.DataBaseHelper.BusinessHelper;
 import Support.HASH;
 
 @Controller 
@@ -271,7 +271,31 @@ public class UserController {
            int userrole=Integer.parseInt(request.getParameter("userrole")) ;
            
            String result="";
-           result= BusinessHelper.AddUser(name,username,password,userrole,email,department,contactnumber);
+           Users user=new Users();
+           List<Users> userList=manchineManagementDao.find("from Users where email=?",new Object[]{email});
+        	if(userList!=null&&userList.size()!=0)
+        	{
+        		result="用户("+email+")已经存在";
+        	}
+        	else
+        	{
+        		user.setName(name);
+        		user.setPassword(password);
+        		user.setUsername(username);
+        		user.setEmail(email);
+        		user.setDepartment(department);
+        		user.setContactNumber(contactnumber);
+        		user.setState("1");
+        		manchineManagementDao.saveOrUpdate(user);
+        		
+        		UsersUserroleR usersUserroleR=new UsersUserroleR();
+        		usersUserroleR.setUserid(user.getId());
+        		usersUserroleR.setRoleid(1);
+        		usersUserroleR.setUpdatetime(new Date());
+        		manchineManagementDao.saveOrUpdate(usersUserroleR);
+        		result="";
+        	}
+        		   
            
 			mv=new ModelAndView("/common/data");
 			mv.addObject("data",result);
@@ -297,13 +321,25 @@ public class UserController {
 			}
 			
            int userid= Integer.parseInt(request.getParameter("userid"));
-           //String username =request.getParameter("username");
-           //String email =request.getParameter("email");
+ 
 
           
            
            String result="";
-           result= BusinessHelper.DeleteUser(userid,"","");
+           
+           Users user=new Users();
+           List<Users> userList=manchineManagementDao.find("from Users where id=?",new Object[]{userid});
+        	if(userList!=null&&userList.size()!=0)
+        	{
+        		result="用户不存在";
+        	}
+        	else
+        	{
+        		user=userList.get(0);
+        		user.setState("2");
+        		manchineManagementDao.saveOrUpdate(user);
+        		result="";
+        	}
            
 			mv=new ModelAndView("/common/data");
 			mv.addObject("data",result);

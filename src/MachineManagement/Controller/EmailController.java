@@ -27,6 +27,7 @@ import com.springframework.orm.ManchineManagementDao;
 
 import Email.EmailHelper;
 import Email.EmailInfo;
+import MachineManagement.Common.CommonDataHelper;
  
 
 @Controller
@@ -37,7 +38,8 @@ public class EmailController {
 	@Autowired(required=true) 
 	private ManchineManagementDao manchineManagementDao;
 	
-	
+	@Autowired(required=true) 
+	private CommonDataHelper commonDataHelper;
 	
 	
      //自动生成邮件内容并发送
@@ -125,7 +127,9 @@ public class EmailController {
 	 		  emailInfo.receiver.add(machineInfo.getResponsibleEmail());
 	 		  //设置邮件标题
 	 		  emailInfo.title="设备月度检查提示-设备资产号："+machineInfo.getPropertyNumber();
-	 		  emailInfo.body=BusinessHelper.CheckCheckRecord(machineInfo, year, month);
+	 		  emailInfo.body=commonDataHelper.CheckCheckRecord(machineInfo, year, month);
+	 		  
+	 		  
 	 		  emailInfo.sender=emailConfiguration.getUserName();
 			
 			

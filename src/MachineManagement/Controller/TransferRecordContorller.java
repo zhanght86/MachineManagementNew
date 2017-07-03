@@ -21,7 +21,6 @@ import com.las.MachineManagement.Bean.Machineinfo;
 import com.las.MachineManagement.Bean.Transferrecord;
 import com.springframework.orm.ManchineManagementDao;
 
-import MachineManagement.DataBaseHelper.BusinessHelper;
 
 @Controller 
 @Scope("prototype")
