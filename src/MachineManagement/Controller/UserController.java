@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,13 +16,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.las.MachineManagement.Bean.Operationtype;
+import com.las.MachineManagement.Bean.Userrole;
+import com.las.MachineManagement.Bean.Users;
+import com.springframework.orm.ManchineManagementDao;
+
 import MachineManagement.DataBaseHelper.BusinessHelper;
-import MachineManagement.DataModel.*;
 import Support.HASH;
 
 @Controller 
 @Scope("prototype")
 public class UserController {
+	
+
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
 	
 	@RequestMapping("User")
 	public ModelAndView User(HttpServletRequest request,HttpServletResponse response,ModelMap modelMap,HttpSession httpSession)throws Exception{
@@ -53,12 +63,9 @@ public class UserController {
 				 return new ModelAndView(new RedirectView(""));
 			}
 			
-           List<User> UserList = new ArrayList<User>();
-           
-           UserList= BusinessHelper.getUserList();
-           
+	    	List<Users>  userList=manchineManagementDao.find("from Users where state=1 ");
 			mv=new ModelAndView("usercontentlist");
-			mv.addObject("UserList", UserList);
+			mv.addObject("UserList", userList);
 		}
 		catch(Exception ex)
 		{
@@ -80,12 +87,12 @@ public class UserController {
 				 return new ModelAndView(new RedirectView(""));
 			}
 			
-           List<User> UserList = new ArrayList<User>();
-           
-           UserList= BusinessHelper.getUserList();
+			
+	    	List<Users>  userList=manchineManagementDao.find("from Users where state=1 ");
+			mv=new ModelAndView("usercontentlist");
            
 			mv=new ModelAndView("userShortListNewMachine");
-			mv.addObject("UserList", UserList);
+			mv.addObject("UserList", userList);
 		}
 		catch(Exception ex)
 		{
@@ -108,12 +115,12 @@ public class UserController {
 				 return new ModelAndView(new RedirectView(""));
 			}
 			
-           List<User> UserList = new ArrayList<User>();
-           
-           UserList= BusinessHelper.getUserList();
+			
+	    	List<Users>  userList=manchineManagementDao.find("from Users where state=1 ");
+			mv=new ModelAndView("usercontentlist");
            
 			mv=new ModelAndView("userShortListMachineDetailInfo");
-			mv.addObject("UserList", UserList);
+			mv.addObject("UserList", userList);
 		}
 		catch(Exception ex)
 		{
@@ -135,12 +142,11 @@ public class UserController {
 				 return new ModelAndView(new RedirectView(""));
 			}
 			
-           List<User> UserList = new ArrayList<User>();
-           
-           UserList= BusinessHelper.getUserList();
+	    	List<Users>  userList=manchineManagementDao.find("from Users where state=1 ");
+			mv=new ModelAndView("usercontentlist");
            
 			mv=new ModelAndView("userShortListTransferRecord");
-			mv.addObject("UserList", UserList);
+			mv.addObject("UserList", userList);
 		}
 		catch(Exception ex)
 		{
@@ -163,23 +169,19 @@ public class UserController {
 			}
 			
 			int userid = Integer.parseInt(request.getParameter("userid"));
-           User user = new User();
+           Users user = new Users();
            
-           user= BusinessHelper.getUserByUserId(userid);
-           
-           mv=new ModelAndView("/common/data");
+       		List<Users>  userList=manchineManagementDao.find("from Users where id=? and state=1 ",new Object[]{userid});
+       		if(userList!=null&&userList.size()!=0)
+       		{
+       			user=userList.get(0);
+       		}
+       		
+   			mv=new ModelAndView("usercontentlist");
+   			mv=new ModelAndView("/common/data");
 			
-			JSONObject obj=new JSONObject ();
-
-			obj.put("id", user.id);
-			obj.put("name", user.name);
-			obj.put("username", user.username);
-			obj.put("password", user.password);
-			obj.put("email", user.email);
-			obj.put("department", user.department);
-			obj.put("contactnumber", user.contactNumber);
-			obj.put("userRole", user.userRole);
-			
+			JSONObject obj=new JSONObject (user);
+ 
 			mv.addObject("data",obj.toString());
 
 		}
@@ -220,20 +222,27 @@ public class UserController {
 			}
 			
 			
-           User user = new User(userid,1,name,"30","男",username,password,email,"0",department,contactnumber,"1");
-           user.setUserRole(roleid);
+	            Users user = new Users();
+	       		List<Users>  userList=manchineManagementDao.find("from Users where id=? and state=1 ",new Object[]{userid});
+	       		if(userList!=null&&userList.size()!=0)
+	       		{
+	       			user=userList.get(0);
+	       		}
+	       		user.setState("1");
+	       		user.setUsername(username);
+	       		user.setPassword(password);
+	       		user.setEmail(email);
+	       		user.setDepartment(department);
+	       		user.setContactNumber(contactnumber);
+	       		manchineManagementDao.saveOrUpdate(user);
            
-           returnValue= BusinessHelper.updateUser(user);
-           
-           mv=new ModelAndView("/common/data");
-
-			mv.addObject("data",returnValue);
+	       		mv=new ModelAndView("/common/data");
+	       		mv.addObject("data",returnValue);
 
 		}
 		catch(Exception ex)
 		{
 			ex.printStackTrace();
-			System.out.println(ex.toString());
 			mv=new ModelAndView("/common/error");
 			mv.addObject("data",ex.toString());
 		}
