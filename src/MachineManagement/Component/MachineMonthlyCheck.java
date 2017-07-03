@@ -18,6 +18,8 @@ import MachineManagement.DataBaseHelper.BusinessHelper;
 @Component
 public class MachineMonthlyCheck {
 	
+	
+	
 	public void checkByUserId()
 	{
 		try

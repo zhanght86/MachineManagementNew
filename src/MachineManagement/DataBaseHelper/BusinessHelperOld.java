@@ -22,7 +22,7 @@ import Support.Formatter;
 import Support.HASH;
 
 
-public class BusinessHelper {
+public class BusinessHelperOld {
 
 	private static Database db=new Database();
 	public static Connection con=db.getConnection();

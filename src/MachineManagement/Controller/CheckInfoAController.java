@@ -19,7 +19,6 @@ import com.las.MachineManagement.Bean.Checkinfoa;
 import com.las.MachineManagement.Bean.Machineinfo;
 import com.springframework.orm.ManchineManagementDao;
 
-import MachineManagement.DataBaseHelper.BusinessHelper;
 
 import org.json.*;
 
@@ -45,8 +44,37 @@ public class CheckInfoAController {
 		  	  Calendar cal = Calendar.getInstance();
 	    	  int year = cal.get(Calendar.YEAR);
 	    	  
-			Checkinfoa  checkinfoa=BusinessHelper.getCheckInfoA(id,year);
+	    	  Machineinfo machineinfo=new Machineinfo();
+				List<Machineinfo> machineinfoList= manchineManagementDao.find("from Machineinfo where id=?",new Object[]{id});
+				if(machineinfoList!=null&&machineinfoList.size()!=0)
+				{
+					machineinfo=machineinfoList.get(0);
+				}
+ 
 			
+			Checkinfoa checkinfoa=new Checkinfoa();
+			List<Checkinfoa> checkinfoaList= manchineManagementDao.find("from Checkinfoa where machineinfo.id=? and year=?",new Object[]{id,String.valueOf(year)});
+			if(checkinfoaList!=null&&checkinfoaList.size()!=0)
+			{
+				checkinfoa=checkinfoaList.get(0);
+			}
+			else
+			{
+				
+			}
+			
+			checkinfoa.setPropertyNumber(checkinfoa.getPropertyNumber());
+			checkinfoa.setResponsibilityDepartment(checkinfoa.getResponsibilityDepartment());
+			checkinfoa.setMachineLocation(checkinfoa.getMachineLocation());
+			checkinfoa.setModel(checkinfoa.getModel());
+			checkinfoa.setSystemInfo(checkinfoa.getSystemInfo());
+			checkinfoa.setIpadd(checkinfoa.getIpadd());
+			checkinfoa.setMachineUsage(checkinfoa.getMachineUsage());
+			checkinfoa.setYear(String.valueOf(year));
+			checkinfoa.setMachineinfo(machineinfo);
+
+			manchineManagementDao.saveOrUpdate(checkinfoa);
+
 			mv=new ModelAndView("/common/data");
 			JSONObject obj=new JSONObject (checkinfoa);
 			

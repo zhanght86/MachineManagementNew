@@ -131,39 +131,12 @@ public class MachineInfoController {
 			}
 			
 			int id=Integer.parseInt(request.getParameter("id").toString());
-		    MachineInfo mi=new MachineInfo();
-		    mi=BusinessHelper.getMachineInfoById(id);
+		    Machineinfo machineinfo=new Machineinfo();
+		    machineinfo=BusinessHelper.getMachineInfoById(id);
 
 			mv=new ModelAndView("/common/data");
-			JSONObject obj=new JSONObject (mi);
-			
-//			obj.put("propertyName", mi.getPropertyName());
-//			obj.put("responsibleid", mi.responsibleUserId);
-//			obj.put("id", mi.id);
-//			obj.put("propertyNumber", mi.propertyNumber);
-//			obj.put("machineLocation", mi.machineLocation);
-//			obj.put("model", mi.model);
-//			obj.put("ipAdd", mi.ipAdd);
-//			obj.put("machineUsage", mi.machineUsage);
-//			obj.put("department", mi.department);
-//			obj.put("responsible", mi.responsible);
-//			obj.put("responsibleEmail", mi.responsibleEmail);
-//			obj.put("responsibleContactNumber", mi.responsibleContactNumber);
-//			obj.put("systemInfo", mi.systemInfo);
-//			obj.put("purchaseTime", mi.purchaseTime);
-//			obj.put("price", mi.price);
-//			obj.put("project", mi.project);
-//			obj.put("comments", mi.comments);
-//			obj.put("registrant", mi.registrant);
-//			obj.put("moveInTime", mi.moveInTime);
-//			obj.put("updateTime", mi.updateTime);
-//			obj.put("purchaser", mi.purchaser);
-//			obj.put("purchaseMethod", mi.purchaseMethod);
-//			obj.put("supplier", mi.supplier);
-//			obj.put("supplierContact", mi.supplierContact);
-//			obj.put("supplierContactNumber", mi.supplierContactNumber);
-//			obj.put("machineType", mi.machineType);
-			
+			JSONObject obj=new JSONObject (machineinfo);
+ 
 			mv.addObject("data",obj.toString());
           
 		}
