@@ -63,13 +63,13 @@ public class CheckInfoAController {
 				
 			}
 			
-			checkinfoa.setPropertyNumber(checkinfoa.getPropertyNumber());
-			checkinfoa.setResponsibilityDepartment(checkinfoa.getResponsibilityDepartment());
-			checkinfoa.setMachineLocation(checkinfoa.getMachineLocation());
-			checkinfoa.setModel(checkinfoa.getModel());
-			checkinfoa.setSystemInfo(checkinfoa.getSystemInfo());
-			checkinfoa.setIpadd(checkinfoa.getIpadd());
-			checkinfoa.setMachineUsage(checkinfoa.getMachineUsage());
+			checkinfoa.setPropertyNumber(machineinfo.getPropertyNumber());
+			checkinfoa.setResponsibilityDepartment(machineinfo.getDepartment());
+			checkinfoa.setMachineLocation(machineinfo.getMachineLocation());
+			checkinfoa.setModel(machineinfo.getModel());
+			checkinfoa.setSystemInfo(machineinfo.getSystemInfo());
+			checkinfoa.setIpadd(machineinfo.getIpadd());
+			checkinfoa.setMachineUsage(machineinfo.getMachineUsage());
 			checkinfoa.setYear(String.valueOf(year));
 			checkinfoa.setMachineinfo(machineinfo);
 

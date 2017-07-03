@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,13 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import MachineManagement.DataBaseHelper.BusinessHelper;
+import com.las.MachineManagement.BeanOther.CheckInfo;
+import com.springframework.orm.ManchineManagementDao;
+
 
 
 @Controller 
 @Scope("prototype")
 public class CheckinfoHistory {
 
+	
+
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
+	
 	//得到检查信息列表
 	@RequestMapping("GetCheckInfoHistoryList")
 	public ModelAndView checkinfohistory(HttpServletRequest request,HttpServletResponse response,ModelMap modelMap,HttpSession httpSession)throws Exception{
@@ -54,8 +63,27 @@ public class CheckinfoHistory {
 		
 		try
 		{
-		  List<CheckinfoHistory> checkInfoList=new ArrayList<CheckinfoHistory>();
-		  checkInfoList=BusinessHelper.getCheckInfoHistory("",keyword_machineid,keyword_year);
+		  List<CheckInfo> checkInfoList=new ArrayList<CheckInfo>();
+		  
+		  String  str1 ="'%' "+keyword_machineid+"'%'";
+		  String str2="'%' "+keyword_year+"'%'";   
+
+		  String sql="(select 'A' as type,machineinfo.id as machindid,`year` as checkyear "
+		  		+ "from checkinfoa inner join machineinfo on machineinfo.id=checkinfoa.MachineInfoID  "
+		  		+ "where checkinfoa.state=1 and CONCAT(machineinfo.id) like str1 and CONCAT(checkinfoa.`year`) like str2 ) "
+		  		+ "UNION (select 'B' as type,machineinfo.id as machindid,`year` as checkyear from checkinfob inner join machineinfo on machineinfo.id=checkinfob.MachineInfoID  "
+		  		+ "where checkinfob.state=1 and CONCAT(machineinfo.id) like str1 and CONCAT(checkinfob.`year`) like str2) order by machindid desc;";
+		  
+		  List<Object[]> result=manchineManagementDao.findBySQL(sql);
+		  for(Object[] obj:result)
+		  {
+			  CheckInfo checkInfo=new CheckInfo();
+			  checkInfo.setType((String)obj[0]);
+			  checkInfo.setId((Integer)obj[1]);
+			  checkInfo.setYear((Integer)obj[2]);
+			  checkInfoList.add(checkInfo);
+		  }
+ 
 		  totalamount=checkInfoList.size();
 		  
 		  if(totalamount%amount!=0)

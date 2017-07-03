@@ -20,7 +20,6 @@ import com.las.MachineManagement.Bean.Checkinfob;
 import com.las.MachineManagement.Bean.Machineinfo;
 import com.springframework.orm.ManchineManagementDao;
 
-import MachineManagement.DataBaseHelper.BusinessHelper;
 
 @Controller 
 @Scope("prototype")
@@ -45,11 +44,43 @@ public class CheckInfoBController {
 		  	  Calendar cal = Calendar.getInstance();
 	    	  int year = cal.get(Calendar.YEAR);
 	    	  
-			Checkinfob  checkInfoB=BusinessHelper.getCheckInfoB(id,year);
+			
+	    	  Machineinfo machineinfo=new Machineinfo();
+					List<Machineinfo> machineinfoList= manchineManagementDao.find("from Machineinfo where id=?",new Object[]{id});
+					if(machineinfoList!=null&&machineinfoList.size()!=0)
+					{
+						machineinfo=machineinfoList.get(0);
+					}
+	 
+				
+				Checkinfob checkinfob=new Checkinfob();
+				List<Checkinfob> checkinfobList= manchineManagementDao.find("from Checkinfob where machineinfo.id=? and year=?",new Object[]{id,String.valueOf(year)});
+				if(checkinfobList!=null&&checkinfobList.size()!=0)
+				{
+					checkinfob=checkinfobList.get(0);
+				}
+				else
+				{
+					
+				}
+				
+				checkinfob.setPropertyNumber(machineinfo.getPropertyNumber());
+				checkinfob.setResponsibilityDepartment(machineinfo.getDepartment());
+				checkinfob.setMachineLocation(machineinfo.getMachineLocation());
+				checkinfob.setModel(machineinfo.getModel());
+				checkinfob.setSystemInfo(machineinfo.getSystemInfo());
+				checkinfob.setIpadd(machineinfo.getIpadd());
+				checkinfob.setMachineUsage(machineinfo.getMachineUsage());
+				checkinfob.setYear(String.valueOf(year));
+				checkinfob.setMachineinfo(machineinfo);
+				
+				manchineManagementDao.saveOrUpdate(checkinfob);
+				
+				
+				
 			
 			mv=new ModelAndView("/common/data");
-			JSONObject obj=new JSONObject (checkInfoB);
-			
+			JSONObject obj=new JSONObject (checkinfob);
 			mv.addObject("data",obj.toString());
 			
 			
