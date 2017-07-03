@@ -1,9 +1,12 @@
 package MachineManagement.Controller;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,13 +14,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import MachineManagement.DataBaseHelper.BusinessHelper;
-import MachineManagement.DataModel.*;
+import com.las.MachineManagement.Bean.Checkinfob;
+import com.las.MachineManagement.Bean.Checkrecordb;
+import com.springframework.orm.ManchineManagementDao;
+
+
 
 @Controller 
 @Scope("prototype")
 public class CheckRecordBController {
-	//取得检查表A月度检查的信息
+	
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
+	
+	//取得检查表B月度检查的信息
 	@RequestMapping("CheckRecordB")
 	public ModelAndView CheckRecordB(HttpServletRequest request,HttpServletResponse response,ModelMap modelMap,HttpSession httpSession)throws Exception{
 		ModelAndView mv=new ModelAndView();
@@ -33,24 +44,25 @@ public class CheckRecordBController {
 			int year=Integer.parseInt(request.getParameter("year"));
 			int month=Integer.parseInt(request.getParameter("month"));
 
-			CheckRecordB  checkRecordB=BusinessHelper.getCheckRecordB(id, year, month);
+			Checkrecordb checkrecordb=new Checkrecordb();
+			List<Checkrecordb> checkrecordbList=manchineManagementDao.find("from Checkrecordb where checkinfob.machineinfo.id=? and  checkinfob.year=? and monthNumber=?",new Object[]{id,String.valueOf(year),month},1,1);
+			if(checkrecordbList!=null&&checkrecordbList.size()!=0)
+			{
+				checkrecordb=checkrecordbList.get(0);
+			}
+			else
+			{
+				List<Checkinfob> checkinfobList=manchineManagementDao.find("from Checkinfob where  machineinfo.id=? and  year=?  ",new Object[]{id,String.valueOf(year)},1,1);
+				if(checkinfobList!=null&&checkinfobList.size()!=0)
+				{
+					checkrecordb.setCheckinfob(checkinfobList.get(0));
+					manchineManagementDao.saveOrUpdate(checkrecordb);
+				}
+			}
+			
 			
 			mv=new ModelAndView("/common/data");
-			JSONObject obj=new JSONObject ();
-			
-			obj.put("id", checkRecordB.id);
-			obj.put("checkInfoID", checkRecordB.checkInfoID);
-			obj.put("monthNumber", checkRecordB.monthNumber);
-			obj.put("networkBackup", checkRecordB.networkBackup);
-			obj.put("harddriverBackup", checkRecordB.harddriverBackup);
-			obj.put("logUploadAnalysis", checkRecordB.logUploadAnalysis);
-			obj.put("firewallCheck", checkRecordB.firewallCheck);
-			obj.put("monthlyFloatAmount", checkRecordB.monthlyFloatAmount);
-			obj.put("serverStoppedInfo", checkRecordB.serverStoppedInfo);
-			obj.put("signature", checkRecordB.signature);
-	
-	
-			
+			JSONObject obj=new JSONObject (checkrecordb);
 			mv.addObject("data",obj.toString());
 			
 		}
@@ -75,21 +87,42 @@ public class CheckRecordBController {
 				}
 				mv=new ModelAndView("/common/data");
 				
-				CheckRecordB checkRecordB=new CheckRecordB(Integer.parseInt(request.getParameter("id")),Integer.parseInt(request.getParameter("checkInfoID")),
-						Integer.parseInt(request.getParameter("monthNumber")),request.getParameter("networkBackup"),
-						   request.getParameter("harddriverBackup"),request.getParameter("logUploadAnalysis"),request.getParameter("firewallCheck"),
-						   request.getParameter("monthlyFloatAmount"),request.getParameter("serverStoppedInfo"),request.getParameter("signature"),"");
-				
-
-				if(BusinessHelper.updateCheckRecordB(checkRecordB))
+				Checkrecordb checkrecordb=new Checkrecordb();
+				List<Checkrecordb> checkrecordbList= manchineManagementDao.find("from Checkrecordb where id=?",new Object[]{Integer.parseInt(request.getParameter("id"))});
+				if(checkrecordbList!=null&&checkrecordbList.size()!=0)
 				{
-					mv.addObject("data","检查表B月度信息更新成功");
+					checkrecordb=checkrecordbList.get(0);
 				}
 				else
 				{
-					mv.addObject("data","检查表B月度信息更新失败");
+					
+				}
+						
+				
+				Checkinfob checkinfob=new Checkinfob();
+				List<Checkinfob> checkinfobList= manchineManagementDao.find("from Checkinfob where id=?",new Object[]{Integer.parseInt(request.getParameter("checkInfoID"))});
+				if(checkinfobList!=null&&checkinfobList.size()!=0)
+				{
+					checkinfob=checkinfobList.get(0);
+					checkrecordb.setCheckinfob(checkinfob);
+				}
+				else
+				{
+					checkrecordb.setCheckinfob(null);
 				}
 				
+				checkrecordb.setMonthNumber(Integer.parseInt(request.getParameter("monthNumber")));
+				checkrecordb.setNetworkBackup(request.getParameter("networkBackup"));
+				checkrecordb.setHarddriverBackup(request.getParameter("harddriverBackup"));
+				checkrecordb.setLogUploadAnalysis(request.getParameter("logUploadAnalysis"));
+				checkrecordb.setFirewallCheck(request.getParameter("firewallCheck"));
+				checkrecordb.setMonthlyFloatAmount(request.getParameter("monthlyFloatAmount"));
+				checkrecordb.setServerStoppedInfo(request.getParameter("serverStoppedInfo"));
+				checkrecordb.setSignature(request.getParameter("signature"));
+				manchineManagementDao.saveOrUpdate(checkrecordb);
+				mv.addObject("data","检查表B月度信息更新成功");
+				
+ 
 			}
 			catch(Exception ex)
 			{
