@@ -1,21 +1,31 @@
 package MachineManagement.Component;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.las.MachineManagement.Bean.Emailconfiguration;
 import com.las.MachineManagement.Bean.Machineinfo;
+import com.las.MachineManagement.Bean.Users;
+import com.las.MachineManagement.Bean.UsersMachineinfoR;
+import com.springframework.orm.ManchineManagementDao;
 
 import Email.EmailHelper;
 import Email.EmailInfo;
+import MachineManagement.Common.CommonDataHelper;
 
 @Component
 public class MachineMonthlyCheck {
+	
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
+	@Autowired(required=true) 
+	private CommonDataHelper commonDataHelper;
 	
 	
 	
@@ -23,15 +33,9 @@ public class MachineMonthlyCheck {
 	{
 		try
 		{
-			MachineManagement.DataBaseHelper.Database db=BusinessHelper.db;
-			Connection connection=db.getConnection();
-			Statement statment=db.getStatement();
-			PreparedStatement perstmt ;
-			String sql="";
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
 			String sqlDate=sdf.format(new Date());
-			ResultSet rs=null;
 			
 			Calendar cal=Calendar.getInstance();//使用日历类
 			int year=cal.get(Calendar.YEAR);//得到年
@@ -42,31 +46,32 @@ public class MachineMonthlyCheck {
 			int second=cal.get(Calendar.SECOND);//得到秒
 			
 			
-			sql="select * from users where state=1 and id<>1 and id<>2 and id<>3 order by id asc;";
-			PreparedStatement perstmt0= connection.prepareStatement(sql);
-			ResultSet rs0=perstmt0.executeQuery();
-			while(rs0.next())
+			
+			List<Users> usersList=manchineManagementDao.find("from Users where  state=1 and id<>1 and id<>2 and id<>3  and id=4 order by id asc");
+			for(Users users:usersList)
 			{
 				
-				int userid=rs0.getInt("id");
-				String username=rs0.getString("name");
-				String email=rs0.getString("email");
-				
-				sql="select u.id as userid,m.id as machineid from machineinfo m left join users_machineinforesponsible_r umr on umr.machineinfoid=m.id left join users u on u.id=umr.userid where m.state=1 and m.MachineType=2 and userid=? order by userid as";
-				PreparedStatement perstmt1= connection.prepareStatement(sql);
-				ResultSet rs1=perstmt1.executeQuery();
-				String checkResult="";
+				int userid=users.getId();
+				String username=users.getName();
+				String email=users.getEmail();
 				boolean needCheck=false;
-				int amachineid=0;
-				while(rs1.next())
+				List<UsersMachineinfoR>  usersMachineinfoRList=manchineManagementDao.find("from UsersMachineinfoR where userid=?",new Object[]{String.valueOf(userid)});
+				String receiver="";
+				for(UsersMachineinfoR usersMachineinfoR:usersMachineinfoRList)
 				{
-					int macineid=rs1.getInt("id");
-					amachineid=macineid;
+				
+					int macineid=Integer.parseInt(usersMachineinfoR.getMachineinfoid());
 					Machineinfo machineInfo=new Machineinfo();
-					machineInfo.setId(macineid);
-					checkResult=BusinessHelper.CheckCheckRecord(machineInfo,year,month);
+					List<Machineinfo>  machineinfoList=manchineManagementDao.find("from Machineinfo where id=? and state=1 ",new Object[]{ macineid});
+					if(machineinfoList!=null&&machineinfoList.size()!=0)
+					{
+						machineInfo=machineinfoList.get(0);
+					}
+					String checkResult=commonDataHelper.CheckCheckRecord(machineInfo,year,month);
+					
 					if(!checkResult.equalsIgnoreCase(""))
 					{
+						receiver=machineInfo.getResponsibleEmail();
 						needCheck=true;
 						break;
 					}
@@ -74,11 +79,26 @@ public class MachineMonthlyCheck {
 				
 				if(needCheck)
 				{
-					EmailConfiguration emailConfiguration=BusinessHelper.getEmailConfigurationByUserID(userid);
-					EmailInfo emailInfo=BusinessHelper.getEmalInfo(amachineid,emailConfiguration);
-					EmailHelper emailHelper=new EmailHelper(emailConfiguration,emailInfo);
+					Emailconfiguration emailConfiguration=new Emailconfiguration();
+					List<Emailconfiguration> emailconfigurationList= manchineManagementDao.find("from Emailconfiguration where id=?",new Object[]{userid});
+					if(emailconfigurationList!=null&&emailconfigurationList.size()!=0)
+					{
+						emailConfiguration=emailconfigurationList.get(0);
+					}
+					else
+					{
+						
+					}
+					
+					EmailInfo emailInfo=new EmailInfo();
+					//设置收件人
+					emailInfo.receiver.add(receiver);
+					//设置邮件标题
+					emailInfo.title="设备月度检查";
 					emailInfo.body="<p>您好 ： </p> <br> <p>您所管理的服务器设备本月检查表未填写完整，请登录 <a href='http://159.226.100.85' >http://159.226.100.85</a> 查看详情。</p> <p>中国科学院文献情报中心资产管理系统</p><br>谢谢！ </p>";
+					EmailHelper emailHelper=new EmailHelper(emailConfiguration,emailInfo);
 					emailHelper.Send();
+					System.out.println("邮件通知："+receiver);
 				}
 			}
 
