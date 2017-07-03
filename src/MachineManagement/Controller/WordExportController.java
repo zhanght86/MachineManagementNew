@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,24 +24,29 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import MachineManagement.DataBaseHelper.BusinessHelper;
-import MachineManagement.DataModel.CheckInfoA;
-import MachineManagement.DataModel.CheckInfoB;
-import MachineManagement.DataModel.CheckRecordA;
-import MachineManagement.DataModel.CheckRecordB;
-import MachineManagement.DataModel.MachineInfo;
 import WordExport.WordTableCheckinfoa;
 import WordExport.WordTableCheckinfob;
 import WordExport.WordTableMachineInfo1;
 
+import com.las.MachineManagement.Bean.Checkinfoa;
+import com.las.MachineManagement.Bean.Checkinfob;
+import com.las.MachineManagement.Bean.Checkrecorda;
+import com.las.MachineManagement.Bean.Checkrecordb;
+import com.las.MachineManagement.Bean.Machineinfo;
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.RectangleReadOnly;
 import com.lowagie.text.rtf.RtfWriter2;
+import com.springframework.orm.ManchineManagementDao;
 
 @Controller
 @Scope("prototype")
 public class WordExportController {
+	
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
 	
 	@RequestMapping("wordExportByMachineId")
 	public Object  wordExportByMachineId(HttpServletRequest request,HttpServletResponse response,HttpSession httpSession)throws Exception{
@@ -65,18 +71,29 @@ public class WordExportController {
 		    String file=webRootBasePath+"/TempDoc/"+fileName;
 		    String filedownload = file;
 		    String filedisplay = fileName;
-		    HashMap<Integer, CheckRecordA> checkRecordAYearList=new HashMap<Integer, CheckRecordA>();
-	    	 HashMap<Integer, CheckRecordB> checkRecordBYearList=new HashMap<Integer, CheckRecordB>();
+		    HashMap<Integer, Checkrecorda> checkRecordAYearList=new HashMap<Integer, Checkrecorda>();
+	    	 HashMap<Integer, Checkrecordb> checkRecordBYearList=new HashMap<Integer, Checkrecordb>();
 
 		    int machineid=Integer.parseInt(request.getParameter("machineid"));
 		    
-		    MachineInfo machineInfo=BusinessHelper.getMachineInfoById(machineid);
+		    Machineinfo machineInfo=BusinessHelper.getMachineInfoById(machineid);
 		    
-		    CheckInfoA checkInfoA=BusinessHelper.getCheckInfoA(machineid, year);
-		    CheckInfoB checkInfoB=BusinessHelper.getCheckInfoB(machineid, year);
+		    Checkinfoa checkInfoA=BusinessHelper.getCheckInfoA(machineid, year);
+		    Checkinfob checkInfoB=BusinessHelper.getCheckInfoB(machineid, year);
 		    
-		    checkRecordAYearList=BusinessHelper.getCheckRecordAByMachineIdAllyear(machineid, year);
-		    checkRecordBYearList=BusinessHelper.getCheckRecordBByMachineIdAllyear(machineid, year);
+		    List<Checkrecorda> checkrecordaList=manchineManagementDao.find("from Checkrecorda where  checkinfoa.machineinfo.id=? and checkinfoa.year=?",new Object[]{machineid,String.valueOf(year)});
+		    List<Checkrecordb> checkrecordbList=manchineManagementDao.find("from Checkrecordb where  checkinfob.machineinfo.id=? and checkinfob.year=?",new Object[]{machineid,String.valueOf(year)});
+		    
+		    for(Checkrecorda checkrecorda:checkrecordaList)
+		    {
+		    	checkRecordAYearList.put(checkrecorda.getMonthNumber(), checkrecorda);
+		    }
+		    for(Checkrecordb checkrecordb:checkrecordbList)
+		    {
+		    	checkRecordBYearList.put(checkrecordb.getMonthNumber(), checkrecordb);
+		    }
+		    
+ 
 		    
 
 		     
@@ -180,10 +197,10 @@ public class WordExportController {
 
 			
 			    List<Object> result=BusinessHelper.getMachineInfoList(keywordProcess(keyword),pageamount,pagecounter,showall,searchcondition,orderstring,userid);
-			    List<MachineInfo> MachineInfoList=new ArrayList<MachineInfo>();
+			    List<Machineinfo> MachineInfoList=new ArrayList<Machineinfo>();
 	            if(result!=null)
 	            {
-	        	  MachineInfoList=(List<MachineInfo>)result.get(1);
+	        	  MachineInfoList=(List<Machineinfo>)result.get(1);
 	            }
 
 	 		    
