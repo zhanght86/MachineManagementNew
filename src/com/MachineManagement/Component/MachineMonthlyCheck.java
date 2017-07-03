@@ -12,6 +12,7 @@ import com.Email.EmailHelper;
 import com.Email.EmailInfo;
 import com.MachineManagement.Common.CommonDataHelper;
 import com.las.MachineManagement.Bean.Emailconfiguration;
+import com.las.MachineManagement.Bean.Emailrecord;
 import com.las.MachineManagement.Bean.Machineinfo;
 import com.las.MachineManagement.Bean.Users;
 import com.las.MachineManagement.Bean.UsersMachineinfoR;
@@ -46,28 +47,35 @@ public class MachineMonthlyCheck {
 			
 			
 			
-			List<Users> usersList=manchineManagementDao.find("from Users where  state=1 and id<>1 and id<>2 and id<>3  and id=4 order by id asc");
+			List<Users> usersList=manchineManagementDao.find("from Users where  state=1 and id<>1 and id<>2 and id<>3   and id =4 order by id asc");
 			for(Users users:usersList)
 			{
-				
+			
 				int userid=users.getId();
 				String username=users.getName();
 				String email=users.getEmail();
 				boolean needCheck=false;
-				List<UsersMachineinfoR>  usersMachineinfoRList=manchineManagementDao.find("from UsersMachineinfoR where userid=?",new Object[]{String.valueOf(userid)});
+				List<UsersMachineinfoR>  usersMachineinfoRList=manchineManagementDao.find("from UsersMachineinfoR where userid=? and state=1 ",new Object[]{String.valueOf(userid)});
 				String receiver="";
+				System.out.println(users.getEmail());
+				String checkResult="";
 				for(UsersMachineinfoR usersMachineinfoR:usersMachineinfoRList)
 				{
 				
 					int macineid=Integer.parseInt(usersMachineinfoR.getMachineinfoid());
 					Machineinfo machineInfo=new Machineinfo();
-					List<Machineinfo>  machineinfoList=manchineManagementDao.find("from Machineinfo where id=? and state=1 ",new Object[]{ macineid});
+					List<Machineinfo>  machineinfoList=manchineManagementDao.find(" from Machineinfo where id=? ",new Object[]{macineid});
 					if(machineinfoList!=null&&machineinfoList.size()!=0)
 					{
+		
 						machineInfo=machineinfoList.get(0);
+						 checkResult=commonDataHelper.CheckCheckRecord(machineInfo,year,month);
+//						System.out.println(checkResult);
 					}
-					String checkResult=commonDataHelper.CheckCheckRecord(machineInfo,year,month);
-					
+					else
+					{
+					}
+			
 					if(!checkResult.equalsIgnoreCase(""))
 					{
 						receiver=machineInfo.getResponsibleEmail();
@@ -79,7 +87,7 @@ public class MachineMonthlyCheck {
 				if(needCheck)
 				{
 					Emailconfiguration emailConfiguration=new Emailconfiguration();
-					List<Emailconfiguration> emailconfigurationList= manchineManagementDao.find("from Emailconfiguration where id=?",new Object[]{userid});
+					List<Emailconfiguration> emailconfigurationList= manchineManagementDao.find("from Emailconfiguration");
 					if(emailconfigurationList!=null&&emailconfigurationList.size()!=0)
 					{
 						emailConfiguration=emailconfigurationList.get(0);
@@ -98,6 +106,18 @@ public class MachineMonthlyCheck {
 					EmailHelper emailHelper=new EmailHelper(emailConfiguration,emailInfo);
 					emailHelper.Send();
 					System.out.println("邮件通知："+receiver);
+					
+					//邮件记录
+					Emailrecord emailrecord=new Emailrecord();
+					emailrecord.setMachineinfo(null);
+					emailrecord.setEmailSender(emailConfiguration.getUserName());
+					emailrecord.setEmailReceiver(receiver);
+					emailrecord.setEmailContent(emailInfo.body);
+					emailrecord.setCreateDatetime(new Date());
+					emailrecord.setUpdateDatetime(new Date());
+					emailrecord.setState("1");
+					manchineManagementDao.saveOrUpdate(emailrecord);
+					
 				}
 			}
 

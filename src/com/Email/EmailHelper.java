@@ -66,7 +66,7 @@ public class EmailHelper {
 		catch(Exception ex)
 		{
 			result=false;
-			System.out.println(ex.toString());
+			ex.printStackTrace();
 		}
 		
 		return result;

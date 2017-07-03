@@ -98,14 +98,45 @@ public class CommonDataHelper {
 
       	try
     	{
-      		List<Checkrecorda> checkrecordaList=manchineManagementDao.find("from Checkrecorda wher checkinfoa.machineinfo.id=? and checkinfoa.year=? and monthNumber=?",new Object[]{machineInfo.getId(),String.valueOf(year),month});
+      		List<Checkrecorda> checkrecordaList=manchineManagementDao.find("from Checkrecorda where checkinfoa.machineinfo.id=? and checkinfoa.year=? and monthNumber=? and state=1 ",new Object[]{machineInfo.getId(),String.valueOf(year),month});
       		Checkrecorda checkrecorda=new Checkrecorda();
       		if(checkrecordaList!=null&&checkrecordaList.size()!=0)
       		{
       			checkrecorda=checkrecordaList.get(0);
       		}
+      		else
+      		{
+      			List<Checkinfoa> checkinfoaList=manchineManagementDao.find("from Checkinfoa where machineinfo.id=? and  year=? and state=1",new Object[]{machineInfo.getId(),String.valueOf(year)});
+      			Checkinfoa checkinfoa=new Checkinfoa();
+      			if(checkinfoaList!=null&&checkinfoaList.size()!=0)
+      			{
+      				checkinfoa=checkinfoaList.get(0);
+      
+      			}
+      			else
+      			{
+    				checkinfoa.setPropertyNumber(machineInfo.getPropertyNumber());
+    				checkinfoa.setResponsibilityDepartment(machineInfo.getDepartment());
+    				checkinfoa.setMachineLocation(machineInfo.getMachineLocation());
+    				checkinfoa.setModel(machineInfo.getModel());
+    				checkinfoa.setSystemInfo(machineInfo.getSystemInfo());
+    				checkinfoa.setIpadd(machineInfo.getIpadd());
+    				checkinfoa.setMachineUsage(machineInfo.getMachineUsage());
+    				checkinfoa.setYear(String.valueOf(year));
+    				checkinfoa.setMachineinfo(machineInfo);
+    				System.out.println(machineInfo.getId());
+    				manchineManagementDao.saveOrUpdate(checkinfoa);
+      			}
       		
-      		if(checkrecorda.getOs().trim().equalsIgnoreCase(""))
+      			
+      			checkrecorda.setCheckinfoa(checkinfoa);
+      			checkrecorda.setMonthNumber(month);
+      			checkrecorda.setState("1");
+      			
+      			manchineManagementDao.saveOrUpdate(checkrecorda);
+      		}
+      		
+      		if(checkrecorda.getOs()==null||checkrecorda.getOs().trim().equalsIgnoreCase(""))
       		{
       			checkResultA+="操作系统;";
       		}
@@ -130,7 +161,7 @@ public class CommonDataHelper {
 //      			checkResultA+="360安全卫士;";
 //      		}
       		
-      		if(checkrecorda.getAccountNormal().trim().equalsIgnoreCase(""))
+      		if(checkrecorda.getAccountNormal()==null||checkrecorda.getAccountNormal().trim().equalsIgnoreCase(""))
       		{
       			checkResultA+="是否正常使用账号;";
       		}
@@ -140,7 +171,7 @@ public class CommonDataHelper {
 //      			checkResultA+="非正常使用账号;";
 //      		}
       		
-      		if(checkrecorda.getEventLog().trim().equalsIgnoreCase(""))
+      		if(checkrecorda.getEventLog()==null||checkrecorda.getEventLog().trim().equalsIgnoreCase(""))
       		{
       			checkResultA+="事件日志;";
       		}
@@ -150,7 +181,7 @@ public class CommonDataHelper {
 //      			checkResultA+="web日志;";
 //      		}
       		
-      		if(checkrecorda.getOsresponsibleSingnature().trim().equalsIgnoreCase(""))
+      		if(checkrecorda.getOsresponsibleSingnature()==null||checkrecorda.getOsresponsibleSingnature().trim().equalsIgnoreCase(""))
       		{
       			checkResultA+="系统责任人签字;";
       		}
@@ -171,7 +202,7 @@ public class CommonDataHelper {
     	}
     	catch(Exception ex)
     	{
-    		System.out.println("BusinessHelper.getCheckRecordACheckResult : "+ex.toString());
+    		ex.printStackTrace();
     		checkResultA="";
     	}
   	     return checkResultA;
@@ -192,12 +223,12 @@ public class CommonDataHelper {
       	try
     	{
 
-      		List<Checkrecordb> checkrecordbList=manchineManagementDao.find("from Checkrecordb wher checkinfoa.machineinfo.id=? and checkinfoa.year=? and monthNumber=?",new Object[]{machineInfo.getId(),String.valueOf(year),month});
+      		List<Checkrecordb> checkrecordbList=manchineManagementDao.find("from Checkrecordb where checkinfob.machineinfo.id=? and checkinfob.year=? and monthNumber=?",new Object[]{machineInfo.getId(),String.valueOf(year),month});
       		Checkrecordb checkrecordb=new Checkrecordb();
       		if(checkrecordbList!=null&&checkrecordbList.size()!=0)
       		{
       			checkrecordb=checkrecordbList.get(0);
-      		}
+
       		
 //      		if(checkrecordb.getNetworkBackup().trim().equalsIgnoreCase(""))
 //      		{
@@ -234,7 +265,9 @@ public class CommonDataHelper {
       			checkResultB+="签字;";
       		}
  
-      	  
+      		}
+      		
+      		
   	     if(!checkResultB.equals(""))
   	     {
   	    	checkResultB="<p>"+year+"年"+month+"月"+",检查表(B),有如下项没有填写完整 : "+"\r\n"+checkResultB+"\r\n"+"</p>";
