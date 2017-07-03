@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import MachineManagement.DataBaseHelper.BusinessHelper;
 import WordExport.WordTableCheckinfoa;
 import WordExport.WordTableCheckinfob;
 import WordExport.WordTableMachineInfo1;
@@ -40,12 +39,17 @@ import com.lowagie.text.RectangleReadOnly;
 import com.lowagie.text.rtf.RtfWriter2;
 import com.springframework.orm.ManchineManagementDao;
 
+import MachineManagement.Common.CommonDataHelper;
+
 @Controller
 @Scope("prototype")
 public class WordExportController {
 	
 	@Autowired(required=true) 
 	private ManchineManagementDao manchineManagementDao;
+	
+	@Autowired(required=true) 
+	private CommonDataHelper commonDataHelper;
 	
 	
 	@RequestMapping("wordExportByMachineId")
@@ -76,10 +80,10 @@ public class WordExportController {
 
 		    int machineid=Integer.parseInt(request.getParameter("machineid"));
 		    
-		    Machineinfo machineInfo=BusinessHelper.getMachineInfoById(machineid);
+		    Machineinfo machineInfo=(Machineinfo) manchineManagementDao.find(" from Machineinfo where id=?",new Object[]{machineid}).get(0);
 		    
-		    Checkinfoa checkInfoA=BusinessHelper.getCheckInfoA(machineid, year);
-		    Checkinfob checkInfoB=BusinessHelper.getCheckInfoB(machineid, year);
+		    Checkinfoa checkInfoA= (Checkinfoa) manchineManagementDao.find("from Checkinfoa where machineinfo.id=? and year=?",new Object[]{machineid,String.valueOf(year)}).get(0);
+		    Checkinfob checkInfoB=(Checkinfob) manchineManagementDao.find("from Checkinfob where machineinfo.id=? and year=?",new Object[]{machineid,String.valueOf(year)}).get(0);
 		    
 		    List<Checkrecorda> checkrecordaList=manchineManagementDao.find("from Checkrecorda where  checkinfoa.machineinfo.id=? and checkinfoa.year=?",new Object[]{machineid,String.valueOf(year)});
 		    List<Checkrecordb> checkrecordbList=manchineManagementDao.find("from Checkrecordb where  checkinfob.machineinfo.id=? and checkinfob.year=?",new Object[]{machineid,String.valueOf(year)});
@@ -196,7 +200,7 @@ public class WordExportController {
 				int userid=Integer.parseInt(request.getParameter("userid").toString());
 
 			
-			    List<Object> result=BusinessHelper.getMachineInfoList(keywordProcess(keyword),pageamount,pagecounter,showall,searchcondition,orderstring,userid);
+			    List<Object> result=commonDataHelper.getMachineInfoList(keyword, pageamount, pagecounter, showall, searchcondition, orderstring, userid);
 			    List<Machineinfo> MachineInfoList=new ArrayList<Machineinfo>();
 	            if(result!=null)
 	            {
