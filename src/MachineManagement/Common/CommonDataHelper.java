@@ -332,8 +332,11 @@ public class CommonDataHelper {
     }
     
     
-
-    
+    /**
+     * 根据用户id获取其数据获取的权限
+     * @param userid
+     * @return
+     */
     public   String getUserRightByUserId(int userid)
 	{
 
@@ -362,6 +365,68 @@ public class CommonDataHelper {
     
     
     
+    
+    /**
+     * 根据设备ID获取设备详情
+     * @param id
+     * @return
+     */
+    public   Machineinfo getMachineInfoById(int id)
+    {
+    	Machineinfo machineinfo=new Machineinfo();
+    	try
+    	{
+    		List<Object[]> searchResult=manchineManagementDao.findBySQL("call machineinfo_search_by_id(?); ", new Object[] {id});
+    		 
+			if(searchResult!=null&&searchResult.size()!=0)
+			{
+					Object[] obj=searchResult.get(0);
+      			    
+      			    machineinfo.setId((int)obj[0]);
+      			    machineinfo.setPropertyNumber((String)obj[1]);
+      			    machineinfo.setMachineLocation((String)obj[2]);
+      			    machineinfo.setModel((String)obj[3]);
+      			    machineinfo.setIpadd((String)obj[4]);
+      			    machineinfo.setMachineUsage((String)obj[5]);
+      			    machineinfo.setDepartment((String)obj[6]);
+      			    machineinfo.setResponsible((String)obj[7]);
+      			    machineinfo.setResponsibleEmail((String)obj[8]);
+      			    machineinfo.setResponsibleContactNumber((String)obj[9]);
+      			    machineinfo.setSystemInfo((String)obj[10]);
+      			    machineinfo.setPurchaseTime((Date)obj[11]);
+      			    machineinfo.setPrice((String)obj[12]);
+      			    machineinfo.setProject((String)obj[13]);
+      			    machineinfo.setComments((String)obj[14]);
+      			    machineinfo.setRegistrant((String)obj[15]);
+      			    machineinfo.setMoveInTime((Date)obj[16]);
+      			    machineinfo.setUpdateTime((Date)obj[17]);
+      			    machineinfo.setPurchaser((String)obj[18]);
+      			    machineinfo.setPurchaseMethod((String)obj[19]);
+      			    machineinfo.setSupplier((String)obj[20]);
+      			    machineinfo.setSupplierContact((String)obj[21]);
+      			    machineinfo.setSupplierContactNumber((String)obj[22]);
+      			    machineinfo.setPropertyName((String)obj[25]);
+      			    
+      			    machineinfo.setCheckStateA((String)obj[26]);
+      			    machineinfo.setCheckStateB((String)obj[27]);
+//      			    machineinfo.setDisplayNumber(((pagecounter-1)*pageamount)+rowindex);
+      			    machineinfo.setResponsible((String)obj[28]);
+      			    machineinfo.setDepartment((String)obj[29]);
+      			    machineinfo.setResponsibleEmail((String)obj[30]);
+      			    machineinfo.setResponsibleContactNumber((String)obj[31]);
+      			    machineinfo.setResponsibleUserId((int)obj[32]);
+      			    machineinfo.setMachineType((String)obj[23]);
+			}
+ 
+    	}
+    	catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    		machineinfo=null;
+    	}
+
+    	return machineinfo;
+    }
     
     
 }

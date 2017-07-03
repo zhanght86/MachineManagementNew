@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,14 +17,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.las.MachineManagement.Bean.Checkinfoa;
+import com.las.MachineManagement.Bean.Checkinfob;
 import com.las.MachineManagement.Bean.Machineinfo;
+import com.las.MachineManagement.Bean.Transferrecord;
+import com.las.MachineManagement.Bean.UsersMachineinfoR;
+import com.las.MachineManagement.Bean.UsersMachineinforesponsibleR;
+import com.springframework.orm.ManchineManagementDao;
 
-import MachineManagement.DataBaseHelper.BusinessHelper;
+import MachineManagement.Common.CommonDataHelper;
 import Support.*;
 
 @Controller
 @Scope("prototype")
 public class MachineInfoController {
+	
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
+	@Autowired(required=true) 
+	private CommonDataHelper commonDataHelper;
+	
+	
 	
 	//设备列表全体信息及搜索
 	@RequestMapping("GetMachineInfoList")
@@ -82,7 +97,7 @@ public class MachineInfoController {
 //			System.out.println(keyword);
 //			System.out.println(searchcondition);
 			
-		    List<Object> result=BusinessHelper.getMachineInfoList(keywordProcess(keyword),pageamount,pagecounter,showall,searchcondition,orderstring,userid);
+		    List<Object> result=commonDataHelper.getMachineInfoList(keyword, pageamount, pagecounter, showall, searchcondition, orderstring, userid);
 		    
 		    List<Machineinfo> machineInfoList=new ArrayList<Machineinfo>();
 
@@ -92,7 +107,7 @@ public class MachineInfoController {
         	  machineInfoList=(List<Machineinfo>)result.get(1);
             }
 //            System.out.println(machineInfoList.size());
-			httpSession.setAttribute("isadmin", BusinessHelper.isadmin(userid));
+			httpSession.setAttribute("isadmin", commonDataHelper.isadmin(userid));
             JSONObject json=new JSONObject(pagestr);
 		    mv=new ModelAndView("machineinfolist");
 		    mv.addObject("isadmin", httpSession.getAttribute("isadmin"));
@@ -132,7 +147,7 @@ public class MachineInfoController {
 			
 			int id=Integer.parseInt(request.getParameter("id").toString());
 		    Machineinfo machineinfo=new Machineinfo();
-		    machineinfo=BusinessHelper.getMachineInfoById(id);
+		    machineinfo=commonDataHelper.getMachineInfoById(id);
 
 			mv=new ModelAndView("/common/data");
 			JSONObject obj=new JSONObject (machineinfo);
@@ -190,15 +205,58 @@ public class MachineInfoController {
 			 String supplierContactNumber=request.getParameter("supplierContactNumber");
 			 String machineType=request.getParameter("machineType");
 			 String propertyName=request.getParameter("propertyName");
-			if(BusinessHelper.AddMachine(propertyNumber, machineLocation, model, ipAdd, machineUsage, department, responsible,responsibleEmail,responsibleContactNumber, systemInfo, purchaseTime,price,project,comments,moveInTime,purchaser,purchaseMethod,supplier,supplierContact,supplierContactNumber,machineType,userid,responsibleid,propertyName))
-			{
-				mv=new ModelAndView("/common/data");
-				mv.addObject("data","新增成功");
-			}
-			else{
-				mv=new ModelAndView("/common/data");
-				mv.addObject("data","新增失败");
-			}
+			 
+			 Machineinfo  machineinfo=new Machineinfo();
+			 machineinfo.setPropertyNumber(propertyNumber);
+			 machineinfo.setMachineLocation(machineLocation);
+			 machineinfo.setModel(model);
+			 machineinfo.setIpadd(ipAdd);
+			 machineinfo.setMachineUsage(machineUsage);
+			 machineinfo.setDepartment(department);
+			 machineinfo.setResponsible(responsible);
+			 machineinfo.setResponsibleEmail(responsibleEmail);
+			 machineinfo.setResponsibleContactNumber(responsibleContactNumber);
+			 machineinfo.setSystemInfo(systemInfo);
+			 machineinfo.setPurchaseTime(purchaseTime);
+			 machineinfo.setPrice(price);
+			 machineinfo.setProject(project);
+			 machineinfo.setComments(comments);
+			 machineinfo.setMoveInTime(moveInTime);
+			 machineinfo.setPurchaser(purchaser);
+			 machineinfo.setPurchaseMethod(purchaseMethod);
+			 machineinfo.setSupplier(supplierContactNumber);
+			 machineinfo.setSupplierContact(supplierContact);
+			 machineinfo.setSupplierContactNumber(supplierContactNumber);
+			 machineinfo.setMachineType(machineType);
+			 machineinfo.setResponsibleUserId(responsibleid);
+			 machineinfo.setPropertyName(propertyName);
+			 machineinfo.setState("1");
+			 manchineManagementDao.saveOrUpdate(machineinfo);
+ 
+			 UsersMachineinfoR usersMachineinfoR=new UsersMachineinfoR();
+			 usersMachineinfoR.setMachineinfoid(String.valueOf(machineinfo.getId()));
+			 usersMachineinfoR.setUserid(String.valueOf(userid));
+			 usersMachineinfoR.setState("1");
+			 manchineManagementDao.saveOrUpdate(usersMachineinfoR);
+			 
+			 UsersMachineinforesponsibleR usersMachineinforesponsibleR=new UsersMachineinforesponsibleR();
+			 usersMachineinforesponsibleR.setMachineinfoid(String.valueOf(machineinfo.getId()));
+			 usersMachineinforesponsibleR.setUserid(String.valueOf(userid));
+			 usersMachineinforesponsibleR.setState("1");
+			 manchineManagementDao.saveOrUpdate(usersMachineinforesponsibleR);
+			 
+			 Transferrecord transferrecord=new Transferrecord();
+			 transferrecord.setMachineinfo(machineinfo);
+			 transferrecord.setCurOwner(machineinfo.getResponsible());
+			 transferrecord.setCurOwnerEmail(machineinfo.getResponsibleEmail());
+			 transferrecord.setDepartment(machineinfo.getDepartment());
+			 transferrecord.setPreOwner(machineinfo.getResponsible());
+			 transferrecord.setPreOwnerEmail(machineinfo.getResponsibleEmail());
+			 transferrecord.setState("1");
+			 manchineManagementDao.saveOrUpdate(transferrecord);
+			 
+			 mv.addObject("data","新增成功");
+ 
 		}
 		catch(Exception ex)
 		{
@@ -226,6 +284,9 @@ public class MachineInfoController {
 			
 			 int userid=Integer.parseInt(request.getParameter("userid"));
 			 int id=Integer.parseInt(request.getParameter("id"));
+			 
+			 
+			 
 			 String propertyNumber=request.getParameter("propertyNumber");
 			 String machineLocation=request.getParameter("machineLocation");
 			 String model=request.getParameter("model");
@@ -250,20 +311,78 @@ public class MachineInfoController {
 			 String machineType=request.getParameter("machineType");
 			 String propertyName=request.getParameter("propertyName");
 			 
-			if(BusinessHelper.UpdateMachine(id,propertyNumber, machineLocation, model, ipAdd, machineUsage, department, responsible,responsibleEmail,responsibleContactNumber,systemInfo, purchaseTime,price,project,comments,moveInTime,purchaser,purchaseMethod,supplier,supplierContact,supplierContactNumber,machineType,userid,propertyName))
-			{
-				mv=new ModelAndView("/common/data");
-				mv.addObject("data","更新成功");
-			}
-			else{
-				mv=new ModelAndView("/common/data");
-				mv.addObject("data","更新失败");
-			}
+			 
+			 Machineinfo machineinfo=(Machineinfo) manchineManagementDao.find(" from Machineinfo where id=?  and state=1 ",new Object[]{id}).get(0);
+			 machineinfo.setPropertyNumber(propertyNumber);
+			 machineinfo.setMachineLocation(machineLocation);
+			 machineinfo.setModel(model);
+			 machineinfo.setIpadd(ipAdd);
+			 machineinfo.setMachineUsage(machineUsage);
+			 machineinfo.setDepartment(department);
+			 machineinfo.setResponsible(responsible);
+			 machineinfo.setResponsibleEmail(responsibleEmail);
+			 machineinfo.setResponsibleContactNumber(responsibleContactNumber);
+			 machineinfo.setSystemInfo(systemInfo);
+			 machineinfo.setPurchaseTime(purchaseTime);
+			 machineinfo.setPrice(price);
+			 machineinfo.setProject(project);
+			 machineinfo.setComments(comments);
+			 machineinfo.setMoveInTime(moveInTime);
+			 machineinfo.setPurchaser(purchaser);
+			 machineinfo.setPurchaseMethod(purchaseMethod);
+			 machineinfo.setSupplier(supplierContactNumber);
+			 machineinfo.setSupplierContact(supplierContact);
+			 machineinfo.setSupplierContactNumber(supplierContactNumber);
+			 machineinfo.setMachineType(machineType);
+			 machineinfo.setPropertyName(propertyName);
+			 machineinfo.setState("1");
+			 manchineManagementDao.saveOrUpdate(machineinfo);
+			 
+			 List<Checkinfoa> checkinfoaList= manchineManagementDao.find(" from Checkinfoa where machineinfo.id=?  and state=1 ",new Object[]{id});
+			 for(Checkinfoa checkinfoa:checkinfoaList)
+			 {
+ 
+				 checkinfoa.setPropertyNumber(machineinfo.getPropertyNumber());
+				 checkinfoa.setMachineLocation(machineinfo.getMachineLocation());
+				 checkinfoa.setModel(machineinfo.getModel());
+				 checkinfoa.setIpadd(machineinfo.getIpadd());
+				 checkinfoa.setMachineUsage(machineinfo.getMachineUsage());
+				 checkinfoa.setResponsibilityDepartment(machineinfo.getDepartment());
+				 checkinfoa.setSystemInfo(machineinfo.getSystemInfo());
+				 manchineManagementDao.saveOrUpdate(checkinfoa);
+				 
+			 }
+			 
+			 List<Checkinfob> checkinfobList= manchineManagementDao.find(" from Checkinfob where machineinfo.id=? and state=1 ",new Object[]{id});
+			 for(Checkinfob checkinfob:checkinfobList)
+			 {
+  
+				 checkinfob.setPropertyNumber(machineinfo.getPropertyNumber());
+				 checkinfob.setMachineLocation(machineinfo.getMachineLocation());
+				 checkinfob.setModel(machineinfo.getModel());
+				 checkinfob.setIpadd(machineinfo.getIpadd());
+				 checkinfob.setMachineUsage(machineinfo.getMachineUsage());
+				 checkinfob.setResponsibilityDepartment(machineinfo.getDepartment());
+				 checkinfob.setSystemInfo(machineinfo.getSystemInfo());
+				 manchineManagementDao.saveOrUpdate(checkinfob);
+				 
+			 }
+			 
+			 List<UsersMachineinforesponsibleR> usersMachineinforesponsibleRList= manchineManagementDao.find(" from UsersMachineinforesponsibleR where machineinfoid.id=? and userid=? ",new Object[]{id,userid});
+			 if(usersMachineinforesponsibleRList!=null&&usersMachineinforesponsibleRList.size()!=0)
+			 {
+				 UsersMachineinforesponsibleR usersMachineinforesponsibleR=usersMachineinforesponsibleRList.get(0);
+				 usersMachineinforesponsibleR.setMachineinfoid(String.valueOf(id));
+				 usersMachineinforesponsibleR.setUserid(String.valueOf(userid));
+				 manchineManagementDao.saveOrUpdate(usersMachineinforesponsibleR);
+			 }
+			mv.addObject("data","更新成功");
+			 
+		 
 		}
 		catch(Exception ex)
 		{
 			ex.printStackTrace();
-			System.out.println("updateMachine :"+ex.toString());
 			mv=new ModelAndView("/common/data");
 			mv.addObject("data","ERROR:"+ex.toString());
 		}
@@ -285,15 +404,13 @@ public class MachineInfoController {
 			}
 			
 			int id=Integer.parseInt(request.getParameter("id"));
-			if(BusinessHelper.DeleteMachine(id))
-			{
-				mv=new ModelAndView("/common/data");
-				mv.addObject("data","删除成功");
-			}
-			else{
-				mv=new ModelAndView("/common/data");
-				mv.addObject("data","删除失败");
-			}
+			
+			
+		    Machineinfo machineInfo=(Machineinfo) manchineManagementDao.find(" from Machineinfo where id=?",new Object[]{id}).get(0);
+		    machineInfo.setState("2");
+		    manchineManagementDao.saveOrUpdate(machineInfo);
+			mv.addObject("data","删除成功");
+ 
 		}
 		catch(Exception ex)
 		{

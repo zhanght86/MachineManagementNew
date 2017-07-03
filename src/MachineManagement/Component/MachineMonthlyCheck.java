@@ -13,7 +13,6 @@ import com.las.MachineManagement.Bean.Machineinfo;
 
 import Email.EmailHelper;
 import Email.EmailInfo;
-import MachineManagement.DataBaseHelper.BusinessHelper;
 
 @Component
 public class MachineMonthlyCheck {
