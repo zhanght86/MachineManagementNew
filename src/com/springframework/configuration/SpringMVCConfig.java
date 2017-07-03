@@ -12,7 +12,7 @@ public class SpringMVCConfig {
     @Bean
     public InternalResourceViewResolver viewResolver(){
         InternalResourceViewResolver viewResolver=new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/jsp/");
+        viewResolver.setPrefix("/jsp/");
         viewResolver.setSuffix(".jsp");
         viewResolver.setViewClass(JstlView.class);
         return viewResolver;
