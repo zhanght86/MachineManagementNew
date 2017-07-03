@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 
 /**
@@ -59,35 +60,24 @@ public class Machineinfo implements java.io.Serializable {
 	
 	public int responsibleUserId;
 	
-	/**
-	 * @return the responsibleUserId
-	 */
-	public int getResponsibleUserId() {
-		return responsibleUserId;
-	}
-
-
-
-
-	/**
-	 * @param responsibleUserId the responsibleUserId to set
-	 */
-	public void setResponsibleUserId(int responsibleUserId) {
-		this.responsibleUserId = responsibleUserId;
-	}
-
-
-
-
-	public String emailList;
+	private  String emailList;
+	
 	private String checkStateA;
+	
 	private String checkStateB;
+	
 	private int displayNumber;
 	
-    public List<Transferrecord> transferRecordList;
-    public List<Checkinfoa> checkInfoAList;
-    public List<Checkinfob> checkInfoBList;
+    public List<Transferrecord> transferRecordList=new ArrayList<Transferrecord>();
+	
+    public List<Checkinfoa> checkInfoAList=new ArrayList<Checkinfoa>();
+	
+    public List<Checkinfob> checkInfoBList=new ArrayList<Checkinfob>();
     
+	
+	
+	
+	
 	 public  Machineinfo(){
 		 this.transferRecordList=new ArrayList<Transferrecord>();
 		 this.checkInfoAList=new ArrayList<Checkinfoa>();
@@ -504,6 +494,7 @@ public class Machineinfo implements java.io.Serializable {
 	/**
 	 * @return the emailList
 	 */
+	@Transient
 	public String getEmailList() {
 		return emailList;
 	}
@@ -524,6 +515,7 @@ public class Machineinfo implements java.io.Serializable {
 	/**
 	 * @return the checkStateA
 	 */
+	@Transient
 	public String getCheckStateA() {
 		return checkStateA;
 	}
@@ -534,6 +526,7 @@ public class Machineinfo implements java.io.Serializable {
 	/**
 	 * @param checkStateA the checkStateA to set
 	 */
+	
 	public void setCheckStateA(String checkStateA) {
 		this.checkStateA = checkStateA;
 	}
@@ -544,6 +537,7 @@ public class Machineinfo implements java.io.Serializable {
 	/**
 	 * @return the checkStateB
 	 */
+	@Transient
 	public String getCheckStateB() {
 		return checkStateB;
 	}
@@ -564,6 +558,7 @@ public class Machineinfo implements java.io.Serializable {
 	/**
 	 * @return the displayNumber
 	 */
+	@Transient
 	public int getDisplayNumber() {
 		return displayNumber;
 	}
@@ -584,6 +579,7 @@ public class Machineinfo implements java.io.Serializable {
 	/**
 	 * @return the transferRecordList
 	 */
+	@Transient
 	public List<Transferrecord> getTransferRecordList() {
 		return transferRecordList;
 	}
@@ -604,6 +600,7 @@ public class Machineinfo implements java.io.Serializable {
 	/**
 	 * @return the checkInfoAList
 	 */
+	@Transient
 	public List<Checkinfoa> getCheckInfoAList() {
 		return checkInfoAList;
 	}
@@ -624,6 +621,7 @@ public class Machineinfo implements java.io.Serializable {
 	/**
 	 * @return the checkInfoBList
 	 */
+	@Transient
 	public List<Checkinfob> getCheckInfoBList() {
 		return checkInfoBList;
 	}
@@ -639,6 +637,24 @@ public class Machineinfo implements java.io.Serializable {
 	}
 
 	
+	/**
+	 * @return the responsibleUserId
+	 */
+	@Transient
+	public int getResponsibleUserId() {
+		return responsibleUserId;
+	}
+
+
+
+
+	/**
+	 * @param responsibleUserId the responsibleUserId to set
+	 */
+	public void setResponsibleUserId(int responsibleUserId) {
+		this.responsibleUserId = responsibleUserId;
+	}
+
 	
 	
 }

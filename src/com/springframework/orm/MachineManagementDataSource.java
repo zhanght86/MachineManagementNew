@@ -20,7 +20,7 @@ public class MachineManagementDataSource {
 
 	// DataSource Configuration
 	private String driverClass = "com.mysql.cj.jdbc.Driver";
-	private String jdbcUrl = "jdbc:mysql://127.0.0.1:3307/wosdatacas?tcpKeepAlive=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
+	private String jdbcUrl = "jdbc:mysql://127.0.0.1:3307/machinemanagement?tcpKeepAlive=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull";
 	private String user = "root";
 	private String password = "chenzjlas";
 	// C3P0 Configuration
@@ -33,12 +33,12 @@ public class MachineManagementDataSource {
 	private int initialPoolSize = 10;
 	private int idleConnectionTestPeriod = 10;
 	private int acquireRetryAttempts = 10;
-	private boolean breakAfterAcquireFailure = true;
+	private boolean breakAfterAcquireFailure = false;
 	private boolean testConnectionOnCheckin = true;
 	private boolean testConnectionOnCheckout = true;
 	private String preferredTestQuery="SELECT 1";
 	// Hibernate Configuration
-	private String[] packageToScan =new String[]{"com.las._124_16_154_70.wosdatacas"};
+	private String[] packageToScan =new String[]{"com.las.MachineManagement.Bean"};
 	private String hibernate_hbm2ddl_auto = "none";
 	private String hibernate_dialect = "org.hibernate.dialect.MySQL5Dialect";
 	private String hibernate_show_sql = "false";
