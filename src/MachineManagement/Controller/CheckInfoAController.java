@@ -1,11 +1,13 @@
 package MachineManagement.Controller;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.las.MachineManagement.Bean.Checkinfoa;
+import com.las.MachineManagement.Bean.Machineinfo;
+import com.springframework.orm.ManchineManagementDao;
 
 import MachineManagement.DataBaseHelper.BusinessHelper;
 
@@ -23,6 +27,9 @@ import org.json.*;
 @Scope("prototype")
 public class CheckInfoAController {
 
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
 	
 	//取得检查表A的信息
 	@RequestMapping("checkinfoamain")
@@ -42,29 +49,6 @@ public class CheckInfoAController {
 			
 			mv=new ModelAndView("/common/data");
 			JSONObject obj=new JSONObject (checkinfoa);
-			
-//			obj.put("id", checkInfoA.id);
-//			obj.put("flowNumber", checkInfoA.flowNumber);
-//			obj.put("serialNumber", checkInfoA.serialNumber);
-//			obj.put("propertyNumber", checkInfoA.propertyNumber);
-//			obj.put("responsibilityDepartment", checkInfoA.responsibilityDepartment);
-//			obj.put("machineLocation", checkInfoA.machineLocation);
-//			obj.put("model", checkInfoA.model);
-//			obj.put("systemInfo", checkInfoA.systemInfo);
-//			obj.put("ipAdd", checkInfoA.ipAdd);
-//			obj.put("machineUsage", checkInfoA.machineUsage);
-//			obj.put("mantainceStaff", checkInfoA.mantainceStaff);
-//			obj.put("backupContent", checkInfoA.backupContent);
-//			obj.put("backupContentChange1", checkInfoA.backupContentChange1);
-//			obj.put("backupContentChange2", checkInfoA.backupContentChange2);
-//			obj.put("fileDirectory", checkInfoA.fileDirectory);
-//			obj.put("fileDirectoryChange1", checkInfoA.fileDirectoryChange1);
-//			obj.put("fileDirectoryChange2", checkInfoA.fileDirectoryChange2);
-//			obj.put("backupPeriod", checkInfoA.backupPeriod);
-//			obj.put("backupPeriodChange1", checkInfoA.backupPeriodChange1);
-//			obj.put("backupPeriodChange2", checkInfoA.backupPeriodChange2);
-//			obj.put("year", checkInfoA.year);
-//			obj.put("machineInfoID", checkInfoA.machineInfoID);
 			
 			mv.addObject("data",obj.toString());
 			
@@ -90,25 +74,52 @@ public class CheckInfoAController {
 			}
 			mv=new ModelAndView("/common/data");
 			
-			Checkinfoa checkinfoa=new Checkinfoa(Integer.parseInt(request.getParameter("id")),request.getParameter("flowNumber"),
-					   request.getParameter("propertyNumber"),request.getParameter("serialNumber"),
-					   request.getParameter("responsibilityDepartment"),request.getParameter("machineLocation"),request.getParameter("model"),
-					   request.getParameter("systemInfo"),request.getParameter("ipAdd"),request.getParameter("machineUsage"),request.getParameter("mantainceStaff"),
-					   request.getParameter("backupContent"),request.getParameter("backupContentChange1"),request.getParameter("backupContentChange2"),request.getParameter("fileDirectory"),
-					   request.getParameter("fileDirectoryChange1"),request.getParameter("fileDirectoryChange2"),request.getParameter("backupPeriod"),request.getParameter("backupPeriodChange1"),
-					   request.getParameter("backupPeriodChange2"),Integer.parseInt(request.getParameter("year")),Integer.parseInt(request.getParameter("machineInfoID")));
 			
-	
-       
-			if(BusinessHelper.updateCheckInfoA(checkinfoa))
+			
+			Checkinfoa checkinfoa=new Checkinfoa();
+			List<Checkinfoa> checkinfoaList= manchineManagementDao.find("from Checkinfoa where id=?",new Object[]{Integer.parseInt(request.getParameter("id"))});
+			if(checkinfoaList!=null&&checkinfoaList.size()!=0)
 			{
-				mv.addObject("data","检查表A基本信息更新成功");
+				checkinfoa=checkinfoaList.get(0);
 			}
 			else
 			{
-				mv.addObject("data","检查表A基本信息更新失败");
+				
 			}
-			
+ 
+			checkinfoa.setFlowNumber( request.getParameter("flowNumber"));
+			checkinfoa.setPropertyNumber(request.getParameter("propertyNumber"));
+			checkinfoa.setSerialNumber(request.getParameter("serialNumber"));
+			checkinfoa.setResponsibilityDepartment( request.getParameter("responsibilityDepartment"));
+			checkinfoa.setMachineLocation(request.getParameter("machineLocation"));
+			checkinfoa.setModel( request.getParameter("model"));
+			checkinfoa.setSystemInfo(request.getParameter("systemInfo"));
+			checkinfoa.setIpadd(request.getParameter("ipAdd"));
+			checkinfoa.setMachineUsage(request.getParameter("machineUsage"));	   
+			checkinfoa.setMantainceStaff(request.getParameter("mantainceStaff"));   
+			checkinfoa.setBackupContent(request.getParameter("backupContent"));	   
+			checkinfoa.setBackupContentChange1(request.getParameter("backupContentChange1"));
+			checkinfoa.setBackupContentChange2(request.getParameter("backupContentChange2"));
+			checkinfoa.setFileDirectory(request.getParameter("fileDirectory"));
+			checkinfoa.setFileDirectoryChange1(request.getParameter("fileDirectoryChange1"));
+			checkinfoa.setFileDirectoryChange2(request.getParameter("fileDirectoryChange2"));
+			checkinfoa.setBackupPeriod(request.getParameter("backupPeriod"));
+			checkinfoa.setBackupPeriodChange1(request.getParameter("backupPeriodChange1"));
+			checkinfoa.setBackupPeriodChange2(request.getParameter("backupPeriodChange2"));
+			checkinfoa.setYear(request.getParameter("year"));
+			List<Machineinfo> machineinfoList= manchineManagementDao.find("from Machineinfo where id=?",new Object[]{Integer.parseInt(request.getParameter("machineInfoID"))});
+			if(machineinfoList!=null&&machineinfoList.size()!=0)
+			{
+				checkinfoa.setMachineinfo(machineinfoList.get(0));
+			}
+			else
+			{
+				checkinfoa.setMachineinfo(null);
+			}
+ 
+			manchineManagementDao.saveOrUpdate(checkinfoa);
+			mv.addObject("data","检查表A基本信息更新成功");
+ 
 		}
 		catch(Exception ex)
 		{

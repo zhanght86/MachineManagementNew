@@ -1,11 +1,13 @@
 package MachineManagement.Controller;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,13 +15,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.las.MachineManagement.Bean.Checkinfoa;
 import com.las.MachineManagement.Bean.Checkinfob;
+import com.las.MachineManagement.Bean.Machineinfo;
+import com.springframework.orm.ManchineManagementDao;
 
 import MachineManagement.DataBaseHelper.BusinessHelper;
 
 @Controller 
 @Scope("prototype")
 public class CheckInfoBController {
+	
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
+	
 	
 	//取得检查表B的信息
 	@RequestMapping("checkinfobmain")
@@ -38,22 +48,7 @@ public class CheckInfoBController {
 			Checkinfob  checkInfoB=BusinessHelper.getCheckInfoB(id,year);
 			
 			mv=new ModelAndView("/common/data");
-			JSONObject obj=new JSONObject ();
-			
-			obj.put("id", checkInfoB.id);
-			obj.put("flowNumber", checkInfoB.flowNumber);
-			obj.put("propertyNumber", checkInfoB.propertyNumber);
-			obj.put("serialNumber", checkInfoB.serialNumber);
-			obj.put("responsibilityDepartment", checkInfoB.responsibilityDepartment);
-			obj.put("machineLocation", checkInfoB.machineLocation);
-			obj.put("model", checkInfoB.model);
-			obj.put("systemInfo", checkInfoB.systemInfo);
-			obj.put("ipAdd", checkInfoB.ipAdd);
-			obj.put("machineUsage", checkInfoB.machineUsage);
-			obj.put("mantainceStaff", checkInfoB.mantainceStaff);
-			obj.put("year", checkInfoB.year);
-			obj.put("machineInfoID", checkInfoB.machineInfoID);
-			obj.put("comments", checkInfoB.comments);
+			JSONObject obj=new JSONObject (checkInfoB);
 			
 			mv.addObject("data",obj.toString());
 			
@@ -79,21 +74,43 @@ public class CheckInfoBController {
 			}
 			mv=new ModelAndView("/common/data");
 			
-			Checkinfob checkInfoB=new Checkinfob(Integer.parseInt(request.getParameter("id")),request.getParameter("flowNumber"),
-					   request.getParameter("propertyNumber"),request.getParameter("serialNumber"),
-					   request.getParameter("responsibilityDepartment"),request.getParameter("machineLocation"),request.getParameter("model"),
-					   request.getParameter("systemInfo"),request.getParameter("ipAdd"),request.getParameter("machineUsage"),request.getParameter("mantainceStaff"),
-					   Integer.parseInt(request.getParameter("year")),Integer.parseInt(request.getParameter("machineInfoID")),request.getParameter("comments"));
 			
-
-			if(BusinessHelper.updateCheckInfoB(checkInfoB))
+			
+			Checkinfob checkInfob=new Checkinfob();
+			List<Checkinfob> CheckinfobList= manchineManagementDao.find("from Checkinfob where id=?",new Object[]{Integer.parseInt(request.getParameter("id"))});
+			if(CheckinfobList!=null&&CheckinfobList.size()!=0)
 			{
-				mv.addObject("data","检查表B基本信息更新成功");
+				checkInfob=CheckinfobList.get(0);
 			}
 			else
 			{
-				mv.addObject("data","检查表B基本信息更新失败");
+				
 			}
+			
+			checkInfob.setFlowNumber(request.getParameter("flowNumber"));
+			checkInfob.setPropertyNumber(request.getParameter("propertyNumber"));
+			checkInfob.setSerialNumber(request.getParameter("serialNumber"));
+			checkInfob.setResponsibilityDepartment(request.getParameter("responsibilityDepartment"));
+			checkInfob.setMachineLocation(request.getParameter("machineLocation"));
+			checkInfob.setModel(request.getParameter("model"));
+			checkInfob.setSystemInfo(request.getParameter("systemInfo"));
+			checkInfob.setIpadd(request.getParameter("ipAdd"));
+			checkInfob.setMachineUsage(request.getParameter("machineUsage"));
+			checkInfob.setMantainceStaff(request.getParameter("mantainceStaff"));
+			checkInfob.setYear(request.getParameter("year"));
+			List<Machineinfo> machineinfoList= manchineManagementDao.find("from Machineinfo where id=?",new Object[]{Integer.parseInt(request.getParameter("machineInfoID"))});
+			if(machineinfoList!=null&&machineinfoList.size()!=0)
+			{
+				checkInfob.setMachineinfo(machineinfoList.get(0));
+			}
+			else
+			{
+				checkInfob.setMachineinfo(null);
+			}
+			checkInfob.setComments(request.getParameter("comments"));
+			manchineManagementDao.saveOrUpdate(checkInfob);
+			mv.addObject("data","检查表B基本信息更新成功");
+
 			
 		}
 		catch(Exception ex)
