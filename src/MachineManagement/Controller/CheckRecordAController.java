@@ -1,8 +1,11 @@
 package MachineManagement.Controller;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,16 +15,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import org.springframework.web.servlet.view.RedirectView;
-
+import com.las.MachineManagement.Bean.Checkinfoa;
 import com.las.MachineManagement.Bean.Checkrecorda;
-
-import MachineManagement.DataBaseHelper.BusinessHelper;
-
+import com.springframework.orm.ManchineManagementDao;
 import org.json.*;
 
 @Controller 
 @Scope("prototype")
 public class CheckRecordAController {
+	
+	
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
+	
 	
 	//取得检查表A月度检查的信息
 	@RequestMapping("CheckRecordA")
@@ -37,38 +43,26 @@ public class CheckRecordAController {
 			int id=Integer.parseInt(request.getParameter("id"));
 			int year=Integer.parseInt(request.getParameter("year"));
 			int month=Integer.parseInt(request.getParameter("month"));
-
-			Checkrecorda checkRecordA=BusinessHelper.getCheckRecordA(id, year, month);
+ 
+			Checkrecorda checkrecorda=new Checkrecorda();
+			List<Checkrecorda> checkrecordaList=manchineManagementDao.find("from Checkrecorda where checkinfoa.machineinfo.id=? and  checkinfoa.year=? and monthNumber=?",new Object[]{id,String.valueOf(year),month},1,1);
+			if(checkrecordaList!=null&&checkrecordaList.size()!=0)
+			{
+				checkrecorda=checkrecordaList.get(0);
+			}
+			else
+			{
+				List<Checkinfoa> checkinfoaList=manchineManagementDao.find("from Checkinfoa where  machineinfo.id=? and  year=?  ",new Object[]{id,String.valueOf(year)},1,1);
+				if(checkinfoaList!=null&&checkinfoaList.size()!=0)
+				{
+					checkrecorda.setCheckinfoa(checkinfoaList.get(0));
+					manchineManagementDao.saveOrUpdate(checkrecorda);
+				}
+			}
+			
 			
 			mv=new ModelAndView("/common/data");
-			JSONObject obj=new JSONObject(checkRecordA);
-			
-//			obj.put("id", checkRecordA.id);
-//			obj.put("checkInfoID", checkRecordA.checkInfoID);
-//			obj.put("os", checkRecordA.os);
-//			obj.put("mouthNumber", checkRecordA.monthNumber);
-//			obj.put("patch", checkRecordA.patch);
-//			obj.put("application", checkRecordA.application);
-//			obj.put("application", checkRecordA.application);
-//			obj.put("dataBaseCheck", checkRecordA.dataBaseCheck);
-//			obj.put("check360", checkRecordA.check360);
-//			obj.put("antivirus", checkRecordA.antivirus);
-//			obj.put("passwordStrength", checkRecordA.passwordStrength);
-//			obj.put("accountNormal", checkRecordA.accountNormal);
-//			obj.put("accountAbnormal", checkRecordA.accountAbnormal);
-//			obj.put("eventLog", checkRecordA.eventLog);
-//			obj.put("webLog", checkRecordA.webLog);
-//			obj.put("dataBaseLog", checkRecordA.dataBaseLog);
-//			obj.put("hardDriverUsage", checkRecordA.hardDriverUsage);
-//			obj.put("pageException", checkRecordA.pageException);
-//			obj.put("reactionaryException", checkRecordA.reactionaryException);
-//			obj.put("patchScanExist", checkRecordA.patchScanExist);
-//			obj.put("patchScanExist", checkRecordA.patchScanExist);
-//			obj.put("patchScanHandle", checkRecordA.patchScanHandle);
-//			obj.put("patchScanOperator", checkRecordA.patchScanOperator);
-//			obj.put("service", checkRecordA.service);
-//			obj.put("osResponsibleSingnature", checkRecordA.osResponsibleSingnature);
-//			obj.put("osAdminsitratorSignature", checkRecordA.osAdminsitratorSignature);
+			JSONObject obj=new JSONObject(checkrecorda);
 			
 			mv.addObject("data",obj.toString());
 			
@@ -96,30 +90,56 @@ public class CheckRecordAController {
 				}
 				mv=new ModelAndView("/common/data");
 				
-//				CheckRecordA checkRecordA=new CheckRecordA(Integer.parseInt(request.getParameter("id")),Integer.parseInt(request.getParameter("checkInfoID")),
-//						   request.getParameter("os"),Integer.parseInt(request.getParameter("monthNumber")),
-//						   request.getParameter("application"),request.getParameter("dataBaseCheck"),request.getParameter("check360"),
-//						   request.getParameter("antivirus"),request.getParameter("accountNormal"),request.getParameter("accountAbnormal"),request.getParameter("eventLog"),
-//						   request.getParameter("webLog"),request.getParameter("dataBaseLog"),request.getParameter("hardDriverUsage"),request.getParameter("osResponsibleSingnature"),
-//						   request.getParameter("osAdminsitratorSignature"),"");
-				
-				CheckRecordA checkRecordA=new CheckRecordA(Integer.parseInt(request.getParameter("id")),Integer.parseInt(request.getParameter("checkInfoID")) , request.getParameter("os"), 
-						Integer.parseInt(request.getParameter("monthNumber")), request.getParameter("patch"), request.getParameter("application"),
-	       				request.getParameter("dataBaseCheck"), request.getParameter("check360"), request.getParameter("antivirus"), request.getParameter("passwordStrength"), request.getParameter("accountNormal"),
-	       						request.getParameter( "accountAbnormal"), request.getParameter("eventLog"), request.getParameter("webLog"), request.getParameter("dataBaseLog"),request.getParameter("hardDriverUsage"),
-	       								request.getParameter( "pageException"), request.getParameter( "reactionaryException"), request.getParameter("patchScanExist"), request.getParameter("patchScanHandle"),
-	       										request.getParameter("patchScanOperator"), request.getParameter("service"), request.getParameter("osResponsibleSingnature"), request.getParameter("osAdminsitratorSignature"),
-	       												"");
-				
-				if(BusinessHelper.updateCheckRecordA(checkRecordA))
+				Checkrecorda checkrecorda=new Checkrecorda();
+				List<Checkrecorda> checkrecordaList= manchineManagementDao.find("from Checkrecorda where id=?",new Object[]{Integer.parseInt(request.getParameter("id"))});
+				if(checkrecordaList!=null&&checkrecordaList.size()!=0)
 				{
-					mv.addObject("data","检查表A月度信息更新成功");
+					checkrecorda=checkrecordaList.get(0);
 				}
 				else
 				{
-					mv.addObject("data","检查表A月度信息更新失败");
+					
+				}
+						
+				
+				Checkinfoa checkinfoa=new Checkinfoa();
+				List<Checkinfoa> checkinfoaList= manchineManagementDao.find("from Checkinfoa where id=?",new Object[]{Integer.parseInt(request.getParameter("checkInfoID"))});
+				if(checkinfoaList!=null&&checkinfoaList.size()!=0)
+				{
+					checkinfoa=checkinfoaList.get(0);
+					checkrecorda.setCheckinfoa(checkinfoa);
+				}
+				else
+				{
+					checkrecorda.setCheckinfoa(null);
 				}
 				
+ 
+				checkrecorda.setOs(	request.getParameter("os"));
+				checkrecorda.setMonthNumber(Integer.parseInt(request.getParameter("monthNumber")));
+				checkrecorda.setPatch(request.getParameter("patch"));
+				checkrecorda.setApplication(request.getParameter("application"));
+				checkrecorda.setDataBaseCheck(request.getParameter("dataBaseCheck"));
+				checkrecorda.setCheck360(request.getParameter("check360"));
+				checkrecorda.setAntivirus(request.getParameter("antivirus"));
+				checkrecorda.setPasswordStrength(request.getParameter("passwordStrength"));
+				checkrecorda.setAccountNormal(request.getParameter("accountNormal"));	
+				checkrecorda.setAccountAbnormal(request.getParameter("accountAbnormal"));
+				checkrecorda.setEventLog(request.getParameter("eventLog"));
+				checkrecorda.setWebLog(request.getParameter("webLog"));
+				checkrecorda.setDataBaseLog(request.getParameter("dataBaseLog"));
+				checkrecorda.setHardDriverUsage(request.getParameter("hardDriverUsage"));
+				checkrecorda.setPageException(request.getParameter("pageException"));
+				checkrecorda.setReactionaryException(request.getParameter("reactionaryException"));
+				checkrecorda.setPatchScanExist(request.getParameter("patchScanExist"));
+				checkrecorda.setPatchScanHandle(request.getParameter("patchScanHandle"));
+				checkrecorda.setPatchScanOperator(request.getParameter("patchScanOperator"));
+				checkrecorda.setService(request.getParameter("service"));
+				checkrecorda.setOsadminsitratorSignature(request.getParameter("osResponsibleSingnature"));	
+				checkrecorda.setOsadminsitratorSignature(request.getParameter("osAdminsitratorSignature"));
+				manchineManagementDao.saveOrUpdate(checkrecorda);
+				mv.addObject("data","检查表A月度信息更新成功");
+ 
 			}
 			catch(Exception ex)
 			{

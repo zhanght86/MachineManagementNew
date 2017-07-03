@@ -8,6 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import org.springframework.stereotype.Component;
+
+import com.las.MachineManagement.Bean.Machineinfo;
+
 import Email.EmailHelper;
 import Email.EmailInfo;
 import MachineManagement.DataBaseHelper.BusinessHelper;
@@ -58,7 +61,7 @@ public class MachineMonthlyCheck {
 				{
 					int macineid=rs1.getInt("id");
 					amachineid=macineid;
-					MachineInfo machineInfo=new MachineInfo();
+					Machineinfo machineInfo=new Machineinfo();
 					machineInfo.setId(macineid);
 					checkResult=BusinessHelper.CheckCheckRecord(machineInfo,year,month);
 					if(!checkResult.equalsIgnoreCase(""))
