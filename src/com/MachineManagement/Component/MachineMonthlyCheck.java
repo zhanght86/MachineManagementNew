@@ -47,7 +47,7 @@ public class MachineMonthlyCheck {
 			
 			
 			
-			List<Users> usersList=manchineManagementDao.find("from Users where  state=1 and id<>1 and id<>2 and id<>3   and id =4 order by id asc");
+			List<Users> usersList=manchineManagementDao.find("from Users where  state=1 and id<>1 and id<>2 and id<>3   order by id asc");
 			for(Users users:usersList)
 			{
 			
