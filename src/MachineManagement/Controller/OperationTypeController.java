@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.las.MachineManagement.Bean.Operationtype;
+import com.springframework.orm.ManchineManagementDao;
+
 import MachineManagement.DataBaseHelper.BusinessHelper;
-import MachineManagement.DataModel.*;
 
 import org.json.*;
 
@@ -23,6 +26,8 @@ import org.json.*;
 @Scope("prototype")
 public class OperationTypeController {
 
+	@Autowired(required=true) 
+	private ManchineManagementDao manchineManagementDao;
 	
 	//取得检查表A的信息
 	@RequestMapping("OperationType")
@@ -35,7 +40,7 @@ public class OperationTypeController {
 				 return new ModelAndView(new RedirectView(""));
 			}
 	    	  
-	    	List<OperationType>  operationTypeList=BusinessHelper.getOperationTypeList();
+	    	List<Operationtype>  operationTypeList=manchineManagementDao.find("from Operationtype");
 			
 			mv=new ModelAndView("/OperationType");
 			mv.addObject("operationTypeList",operationTypeList);

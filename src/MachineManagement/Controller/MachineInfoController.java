@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.las.MachineManagement.Bean.Machineinfo;
+
 import MachineManagement.DataBaseHelper.BusinessHelper;
-import MachineManagement.DataModel.*;
 import Support.*;
 
 @Controller
@@ -82,12 +83,13 @@ public class MachineInfoController {
 //			System.out.println(searchcondition);
 			
 		    List<Object> result=BusinessHelper.getMachineInfoList(keywordProcess(keyword),pageamount,pagecounter,showall,searchcondition,orderstring,userid);
-		    List<MachineInfo> machineInfoList=new ArrayList<MachineInfo>();
+		    
+		    List<Machineinfo> machineInfoList=new ArrayList<Machineinfo>();
 
             if(result!=null)
             {
         	  pagestr=(String)result.get(0);
-        	  machineInfoList=(List<MachineInfo>)result.get(1);
+        	  machineInfoList=(List<Machineinfo>)result.get(1);
             }
 //            System.out.println(machineInfoList.size());
 			httpSession.setAttribute("isadmin", BusinessHelper.isadmin(userid));
