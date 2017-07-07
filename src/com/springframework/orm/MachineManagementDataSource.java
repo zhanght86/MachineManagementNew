@@ -20,9 +20,9 @@ public class MachineManagementDataSource {
 
 	// DataSource Configuration
 	private String driverClass = "com.mysql.cj.jdbc.Driver";
-	private String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/machinemanagement?tcpKeepAlive=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false";
+	private String jdbcUrl = "jdbc:mysql://127.0.0.1:3307/machinemanagement?tcpKeepAlive=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false";
 	private String user = "root";
-	private String password = "root12345";
+	private String password = "chenzjlas";
 	// C3P0 Configuration
 	private String dataSourceName = "MachineManagementDatasource";
 	private int minPoolSize = 10;

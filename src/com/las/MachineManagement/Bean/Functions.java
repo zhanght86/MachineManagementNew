@@ -1,5 +1,5 @@
 package com.las.MachineManagement.Bean;
-// Generated 2017-7-3 9:45:31 by Hibernate Tools 5.2.3.Final
+// Generated 2017-7-7 17:45:23 by Hibernate Tools 5.2.3.Final
 
 import java.util.Date;
 import javax.persistence.Column;
